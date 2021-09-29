@@ -1,6 +1,5 @@
 # Phishing Net
-
-by Kevin Kilarski
+## by Kevin Kilarski
 
 Link to Project:
 

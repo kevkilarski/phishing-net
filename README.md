@@ -1,5 +1,4 @@
-Phishing Net
-
-An appilcation by Kevin Kilarski
+### Phishing Net
+Application designed by Kevin Kilarski
 
 Link to Project:

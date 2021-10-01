@@ -9,7 +9,11 @@ import Clean from './Clean.js';
 import Flagged from './Flagged.js';
 
 
-function App() {
+const App = () => {
+
+
+  // --- For Loading Notification ---
+  const [isLoading, setLoading] = useState(true);
 
 
 
@@ -29,21 +33,21 @@ function App() {
 
 
 
+  // Form Functions
+    // Function to handle user input submission
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      console.log("Handle Submit", event.target[0].value);
+      setUserText(event.target[0].value);
+      // console.log(userText);
+      // setUserText('');
+    }
 
-  // Function to handle user input submission
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Handle Submit", event.target[0].value);
-    setUserText(event.target[0].value);
-    console.log(userText);
-    // setUserText('');
-  }
 
-
-  const handleChange = (event) => {
-    // console.log("Handle Change", event);
-    // setUserText(event.target.value);
-  }
+    const handleChange = (event) => {
+      // console.log("Handle Change", event);
+      // setUserText(event.target.value);
+    }
 
 
   
@@ -54,8 +58,9 @@ function App() {
       url: 'https://phishstats.info:2096/api/phishing',
       dataResponse: 'json',
       params: {
-        _where: `(url,like,~${userText}~)`,
+        _where: `(url,eq,${userText})`,
         // _where: '(url,eq,https://applecloud-ma.com/)',
+        // _where: '(url,eq,https://apple.com/)',
         _sort: '-id'
       }
     }).then( (response) => {
@@ -70,6 +75,10 @@ function App() {
         setFlaggedToggle(true);
         setUrl(response.data[0]);
       }
+
+
+      // --- For Loading Notification ---
+      setLoading(false);
 
 
 
@@ -108,22 +117,29 @@ function App() {
   return (
     // Using a fractional to add multiple unrelated elements
     <>
+      <div className="background">
+        <header>
+          <div className="wrapper">
+            <h1>Phishing Net</h1>
+          </div>
+        </header>
 
-      <header>
-        <div className="wrapper">
-          <h1>Phishing Net</h1>
-        </div>
-      </header>
+        <section className="description">
+          <div className="wrapper">
+              <h2>Tired of being lured by scammers? <span>Untangle yourself using this reel handy app!</span></h2>
+              <p>Created by Kevin Kilarski at <a href="https://junocollege.com/">Juno College</a> <span>using the <a href="https://phishstats.info/">PhishStas API</a></span></p>
+          </div>
+        </section>
 
-      <section className="input">
-        <div className="wrapper">
-          <form onSubmit={handleSubmit} className="formUrl">
-            <label htmlFor="searchUrl" className="searchUrlLabel">Please enter a URL:</label>
-            <input type="text" id="searchUrl" className="searchUrlInput" id="searchUrl" placeholder="Example: apple.com"></input>
-            <button type="submit">Submit URL</button>
-          </form>
-        </div>
-      </section>
+        <section className="input">
+          <div className="wrapper">
+            <form onSubmit={handleSubmit} className="formUrl">
+              <label htmlFor="searchUrl" className="searchUrlLabel">Please enter a URL:</label>
+              <input type="text" id="searchUrl" className="searchUrlInput" id="searchUrl" placeholder="Example: apple.com"></input>
+              <button type="submit">Is this Website Phishy?</button>
+            </form>
+          </div>
+        </section>
 
 
       <Output>
@@ -131,10 +147,10 @@ function App() {
           // urlData.flagged === true ? <Flagged urlObject={urlData} /> : <Clean urlAddress={urlData.urlAddress} />
           // urlData.flagged === true ? <Flagged urlAddress={urlData.urlAddress} country={urlData.country} city={urlData.city} score={urlData.score} timesFlagged={urlData.timesFlagged} virus={urlData.virus}/> : <Clean urlAddress={urlData.urlAddress} />
           // url ? <Flagged urlAddress={url}/> : <Clean urlAddress={url} />
-          flaggedToggle === true ? <Flagged urlAddress={url.url} country={url.country} city={url.city} score={url.score} timesFlagged={url.n_times_seen_ip} virus={url.virus_total} /> : <Clean urlAddress={userText} />
+          flaggedToggle === true ? <Flagged isLoading={isLoading} urlAddress={url.url} country={url.countryname} city={url.city} score={url.score} timesFlagged={url.n_times_seen_ip} virus={url.virus_total} /> : <Clean urlAddress={userText} />
         }
       </Output>
-
+      </div>
     </>
   );
 }

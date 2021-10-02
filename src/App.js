@@ -24,12 +24,24 @@ const App = () => {
 
 
   // Utilizing useState Hook to store text field information
-  const [userText, setUserText] = useState();
+  const [userText, setUserText] = useState("");
 
 
   // Utilizing useState Hook to store toggle for flagged urls
-  const [flaggedToggle, setFlaggedToggle] = useState();
+  const [flaggedToggle, setFlaggedToggle] = useState('No results');
 
+  // // Utilizing useState Hook to store toggle for flagged urls
+  // const [submitToggle, setSubmitToggle] = useState(false);
+
+  // Utilizing useState Hook to store toggle for submission
+  const [submit, setSubmit] = useState();
+
+
+    const handleChange = (event) => {
+      // console.log("Handle Change", event);
+      console.log("it changed!");
+      setUserText(event.target.value);
+    }
 
 
 
@@ -38,27 +50,27 @@ const App = () => {
     const handleSubmit = (event) => {
       event.preventDefault();
       console.log("Handle Submit", event.target[0].value);
-      setUserText(event.target[0].value);
       // console.log(userText);
       // setUserText('');
+      setSubmit(userText);
     }
 
 
-    const handleChange = (event) => {
-      // console.log("Handle Change", event);
-      // setUserText(event.target.value);
-    }
 
 
   
   // Utilizing useEffect Hook for API call, to render when necessary
   useEffect( () => {
+
+  if (submit) {
+    
+ 
     axios({
       method: 'GET',
       url: 'https://phishstats.info:2096/api/phishing',
       dataResponse: 'json',
       params: {
-        _where: `(url,eq,${userText})`,
+        _where: `(url,eq,${submit})`,
         // _where: '(url,eq,https://applecloud-ma.com/)',
         // _where: '(url,eq,https://apple.com/)',
         _sort: '-id'
@@ -67,51 +79,20 @@ const App = () => {
       console.log("API RESPONSE", response);
       console.log("USER TEXT", userText);
       console.log("API RESPONSE FOR STATE", response.data[0]);
-
+      console.log("SUBMIT", submit);
 
       if (response.data.length === 0) {
-        setFlaggedToggle(false);
+        setFlaggedToggle('Clean');
       } else {
-        setFlaggedToggle(true);
+        setFlaggedToggle('Flagged');
         setUrl(response.data[0]);
       }
-
 
       // --- For Loading Notification ---
       setLoading(false);
 
-
-
-
-      // Setting the state to the flagged or an empty string if unflagged
-      // response.data.length === 0 ? setUrl('') : setUrl([response.data[0].url, response.data[0].city]);
-      
-
-      // if (response.data.length === 0) {
-      //   urlData.flagged = false;
-      //   urlData.urlAddress = 'https://cleanurl.com/';
-      //   setUrl(urlData)
-      // } else {
-      //   urlData.flagged = true;
-      //   urlData.urlAddress = response.data[0].url;
-      //   urlData.country = response.data[0].countryname;
-      //   urlData.city = response.data[0].city;
-      //   urlData.score = response.data[0].score;
-      //   urlData.timesFlagged = response.data[0].n_times_seen_ip;
-      //   urlData.virus = response.data[0].virus_total;
-      //   setUrl(urlData);
-      // }
-
-
-      // if (response.data.length === 0) {
-      //   setUrl('');
-      // } else {
-      //   setUrl(response.data[0].url);
-      // }
-
-
     });
-  }, [userText]);
+  } }, [submit]);
 
 
   return (
@@ -134,23 +115,25 @@ const App = () => {
         <section className="input">
           <div className="wrapper">
             <form onSubmit={handleSubmit} className="formUrl">
-              <label htmlFor="searchUrl" className="searchUrlLabel">Please enter a URL:</label>
-              <input type="text" id="searchUrl" className="searchUrlInput" id="searchUrl" placeholder="Example: apple.com"></input>
+              <label htmlFor="searchUrl">Please enter a URL:</label>
+              <input type="text" onChange={ handleChange } value={ userText} id="searchUrl" className="searchUrlInput" placeholder="Example: apple.com"></input>
               <button type="submit">Is this Website Phishy?</button>
             </form>
           </div>
         </section>
 
+              </div>
 
       <Output>
         {
           // urlData.flagged === true ? <Flagged urlObject={urlData} /> : <Clean urlAddress={urlData.urlAddress} />
           // urlData.flagged === true ? <Flagged urlAddress={urlData.urlAddress} country={urlData.country} city={urlData.city} score={urlData.score} timesFlagged={urlData.timesFlagged} virus={urlData.virus}/> : <Clean urlAddress={urlData.urlAddress} />
           // url ? <Flagged urlAddress={url}/> : <Clean urlAddress={url} />
-          flaggedToggle === true ? <Flagged isLoading={isLoading} urlAddress={url.url} country={url.countryname} city={url.city} score={url.score} timesFlagged={url.n_times_seen_ip} virus={url.virus_total} /> : <Clean urlAddress={userText} />
+
+          submit && flaggedToggle === 'Flagged' ? <Flagged isLoading={isLoading} urlAddress={url.url} country={url.countryname} city={url.city} score={url.score} timesFlagged={url.n_times_seen_ip} virus={url.virus_total} /> : submit && flaggedToggle === 'Clean' ? <Clean urlAddress={submit} /> : <p className="displayNone">Nothing</p>
         }
       </Output>
-      </div>
+
     </>
   );
 }

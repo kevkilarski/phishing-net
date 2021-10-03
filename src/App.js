@@ -37,6 +37,11 @@ const App = () => {
   // Utilizing useState Hook to store toggle for whether text was entered
   const [needText, setNeedText] = useState(false);
 
+  // Utilizing useState Hook to store toggle for whether text was entered
+  const [needUrl, setNeedUrl] = useState(false);
+
+
+
   // Utilizing useState Hook to store toggle for submission
   const [submit, setSubmit] = useState();
 
@@ -55,34 +60,33 @@ const App = () => {
     // Function to handle user input submission
     const handleSubmit = (event) => {
       event.preventDefault();
-      
       const urlCheck = userText.substr(0,4);
       console.log(urlCheck);
 
-      if (urlCheck !== "http") {
-        alert("That aint no url!");
-        setUserText("");
-      } else {
-      // console.log(userText);
-      // setUserText('');
-      if (userText) {
-        setSubmitToggle(1);
+      if (userText && urlCheck !== "http") {
         setNeedText(false);
-        // --- For Loading Notification ---
-        setLoading(true);
-        setSubmit(userText);
-      } else {
-        setNeedText(true);
-        // alert("Need text!");
-      }
+        setNeedUrl(true);
+        setLoading(false);
+        setUserText("");
+      } else if (userText) {
+        // console.log(userText);
+        // setUserText('');
+
+          setSubmitToggle(1);
+          setNeedText(false);
+          setNeedUrl(false);
+          // --- For Loading Notification ---
+          setLoading(true);
+          setSubmit(userText);
+        } else {
+          setNeedUrl(false);
+          setNeedText(true);
+          // alert("Need text!");
+        }
 
       
       }
 
-
-
-
-    }
 
 
 
@@ -111,20 +115,23 @@ const App = () => {
       console.log("API RESPONSE FOR STATE", response.data[0]);
       console.log("SUBMIT", submit);
 
-      if (response.data.length === 0) {
-        setFlaggedToggle('Clean');
-      } else {
-        setFlaggedToggle('Flagged');
-        setUrl(response.data[0]);
-      }
+      // This timeout was added only to demonstrate a 'loading' feature for the api that I worked on.  It would be removed for production build.
+      setTimeout(() => {
 
-      setUserText("");
-
-
-      // --- For Loading Notification ---
-      setLoading(false);
-
-      setSubmitToggle(0);
+        if (response.data.length === 0) {
+          setFlaggedToggle('Clean');
+        } else {
+          setFlaggedToggle('Flagged');
+          setUrl(response.data[0]);
+        }
+        
+        setUserText("");
+        
+        // --- For Loading Notification ---
+        setLoading(false);
+        
+        setSubmitToggle(0);
+      }, 3000);
     });
   } }, [submit, userText, submitToggle]);
 
@@ -153,8 +160,9 @@ const App = () => {
               <input type="text" onChange={ handleChange } value={ userText} id="searchUrl" className="searchUrlInput" placeholder="Example: https://www.apple.com"></input>
               <button type="submit">Is this Website Phishy?</button>
             </form>
+            { needUrl ? <p className="needText">Try using a full address (e.g. <em>http</em>...)</p> : <p className="displayNone">Nothing</p> }
             { needText ? <p className="needText">Enter your url above!</p> : <p className="displayNone">Nothing</p> }
-            { submit && !needText ? <LoadingArrow isLoading={isLoading} /> : <p className="displayNone">Nothing</p> }
+            { submit && !needText && !needUrl ? <LoadingArrow isLoading={isLoading} /> : <p className="displayNone">Nothing</p> }
           </div>
         </section>
 

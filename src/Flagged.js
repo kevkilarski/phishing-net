@@ -1,4 +1,4 @@
-function Flagged(props) {
+function Flagged({urlData}) {
     return (
         <div className="resultsGroup flaggedGroup">
             <div className="resultsTitle flaggedTitle">
@@ -6,23 +6,23 @@ function Flagged(props) {
                 <p>Phishing scams reported!</p>
             </div>
             <div className="resultsAddress flaggedAddress">
-                <p>{props.urlAddress}</p>
+                <p>{urlData.urlAddress}</p>
             </div>
             <div className="resultsDetails flaggedDetails">
                 <p>Country</p>
-                { props.country == null ? <p>N/A</p> : <p>{props.country}</p> }
+                { urlData.country == null ? <p>N/A</p> : <p>{urlData.country}</p> }
             </div>
             <div className="resultsDetails flaggedDetails">
                 <p>City</p>
-                { props.city == null ? <p>N/A</p> : <p>{props.city}</p> }
+                { urlData.city == null ? <p>N/A</p> : <p>{urlData.city}</p> }
             </div>
             <div className="resultsDetails flaggedDetails">
                 <p>Viruses as well?</p>
-                { props.virus == null ? <p>N/A</p> : <p>{props.virus}</p> }
+                { urlData.virus == null ? <p>N/A</p> : <p>{urlData.virus}</p> }
             </div>
             <div className="resultsDetails flaggedDetails">
                 <p>Threat Score (0-10)</p>
-                { props.score == null ? <p>N/A</p> : <p>{props.score}</p> }
+                { urlData.score == null ? <p>N/A</p> : <p>{urlData.score}</p> }
             </div>
         </div>
     )

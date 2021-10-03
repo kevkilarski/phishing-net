@@ -179,6 +179,10 @@ INPUT
   background-blend-mode: multiply;
 }
 
+.input .wrapper {
+  position: relative;
+}
+
 .formUrl {
   display: flex;
   flex-direction: column;
@@ -213,6 +217,57 @@ button:active {
     top: 6px;
 }
 
+.needText {
+  position: absolute;
+  top: 14rem;
+  left: 50%;
+  font-size: 2rem;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+
+.loadingFlash {
+  position: absolute;
+  top: 14rem;
+  left: 50%;
+  font-size: 2rem;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  animation: flickerAnimation 1s infinite;
+}
+
+/* This animation was inspired by: https://codepen.io/engsiang/pen/eWeNOP */
+@keyframes flickerAnimation {
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+
+
+.loadingFound {
+  position: absolute;
+  top: 14rem;
+  left: 50%;
+  font-size: 2rem;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+
+.loadingArrow {
+  /* position: absolute;
+  top: 14rem;
+  left: 50%;
+  width: 0; 
+  height: 0; 
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-top: 50px solid #f00;
+  transform: translate(-50%, -50%);
+  animation: flickerAnimation 1s infinite; */
+}
+
 /* ======================
 OUTPUT
 =========================*/
@@ -223,6 +278,7 @@ OUTPUT
   /* background: linear-gradient(rgba(255,255,255,0), rgba(255, 255, 255, 0.9)); */
   /* margin-top: -5rem; */
   background: rgb(63, 150, 177);
+  padding-top: 2rem;
 }
 
 .resultsGroup {
@@ -261,11 +317,13 @@ OUTPUT
   width: 100%;
   margin: 0.3rem 0;
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1rem;
   background-color: rgba(196, 44, 44, 0.9);
 }
 
 .resultsAddress p {
+  width: 90%;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }

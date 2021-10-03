@@ -12,7 +12,7 @@
 
 
 function Flagged(props) {
-    return props.isLoading ? ( <> <h2>LOADING!!!!!!!!!!!!!!!!!!</h2> {console.log("LOADING!!!")} </> ) : (
+    return (
         <div className="resultsGroup flaggedGroup">
             <div className="resultsTitle flaggedTitle">
                 <p><strong>FLAGGED</strong></p>

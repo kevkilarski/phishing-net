@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 // importing components
-import LoadingArrow from './LoadingArrow.js';
+import LoadingMessage from './LoadingMessage.js';
 import Output from './Output.js';
 import Clean from './Clean.js';
 import Flagged from './Flagged.js';
@@ -12,132 +12,107 @@ import Flagged from './Flagged.js';
 
 const App = () => {
 
+  // useState Hooks
+    // Storing object from each API call
+    const [url, setUrl] = useState({});
 
-  // --- For Loading Notification ---
-  const [isLoading, setLoading] = useState(false);
+    // Storing values of text input
+    const [userText, setUserText] = useState("");
+    
+    // Storing finalized text input for submission
+    const [submit, setSubmit] = useState();
 
+    // Storing toggle for submission event (used for error handling, otherwise a duplicate text input submission would not trigger useEffect)
+    const [submitToggle, setSubmitToggle] = useState(0);
 
+    // Storing toggle for flagged urls for phishing scams
+    const [flaggedToggle, setFlaggedToggle] = useState('');
 
+    // Storing toggle for whether a blank text input was provided to proceed with form submission
+    const [needText, setNeedText] = useState(false);
 
-  // Utilizing useState Hook to store data from each API call, to be used a a prop
-  const [url, setUrl] = useState({});
+    // Storing toggle for whether a url-like text input was provided to proceed with form submission
+    const [needUrl, setNeedUrl] = useState(false);
 
-
-
-  // Utilizing useState Hook to store text field information
-  const [userText, setUserText] = useState("");
-
-
-  // Utilizing useState Hook to store toggle for flagged urls
-  const [flaggedToggle, setFlaggedToggle] = useState('No results');
-
-  // // Utilizing useState Hook to store toggle for flagged urls
-  // const [submitToggle, setSubmitToggle] = useState(false);
-
-  // Utilizing useState Hook to store toggle for whether text was entered
-  const [needText, setNeedText] = useState(false);
-
-  // Utilizing useState Hook to store toggle for whether text was entered
-  const [needUrl, setNeedUrl] = useState(false);
+     // Storing toggle for loading notification
+    const [isLoading, setLoading] = useState(false);
 
 
+  // Function to set userText state with user input
+  const handleChange = (event) => {
+    setUserText(event.target.value);
+  }
 
-  // Utilizing useState Hook to store toggle for submission
-  const [submit, setSubmit] = useState();
 
-  const [submitToggle, setSubmitToggle] = useState(0);
+  // Function to set userSubmit with userText, triggering api call
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-    const handleChange = (event) => {
-      // console.log("Handle Change", event);
-      console.log("it changed!");
-      console.log(event.target.value);
-      setUserText(event.target.value);
+    // Parsing beginning of user text to determine if a full url is provided
+    const urlCheck = userText.substr(0,4);
+
+    // Conditional logic to either require an http prefix, require entering any text, or submit the user text
+    if (userText && urlCheck !== "http") {
+      setNeedUrl(true);
+      setNeedText(false);
+      setLoading(false);
+      setUserText("");
+    } else if (!userText) {
+      setNeedUrl(false);
+      setNeedText(true);
+      setLoading(false);
+    } else {
+      setNeedUrl(false);
+      setNeedText(false);
+      setLoading(true);
+      setSubmitToggle(1);
+      setSubmit(userText);
     }
+  }
 
-
-
-  // Form Functions
-    // Function to handle user input submission
-    const handleSubmit = (event) => {
-      event.preventDefault();
-      const urlCheck = userText.substr(0,4);
-      console.log(urlCheck);
-
-      if (userText && urlCheck !== "http") {
-        setNeedText(false);
-        setNeedUrl(true);
-        setLoading(false);
-        setUserText("");
-      } else if (userText) {
-        // console.log(userText);
-        // setUserText('');
-
-          setSubmitToggle(1);
-          setNeedText(false);
-          setNeedUrl(false);
-          // --- For Loading Notification ---
-          setLoading(true);
-          setSubmit(userText);
-        } else {
-          setNeedUrl(false);
-          setNeedText(true);
-          // alert("Need text!");
-        }
-
-      
-      }
-
-
-
-
-
-  
-  // Utilizing useEffect Hook for API call, to render when necessary
+  // useEffect Hook for API call
   useEffect( () => {
 
-  if (submitToggle === 1) {
-    
-
-    axios({
-      method: 'GET',
-      url: 'https://phishstats.info:2096/api/phishing',
-      dataResponse: 'json',
-      params: {
-        _where: `(url,eq,${submit})`,
-        // _where: '(url,eq,https://applecloud-ma.com/)',
-        // _where: '(url,eq,https://apple.com/)',
-        // _where: `(url,like,~${submit}~)`,
-        _sort: '-id'
-      }
-    }).then( (response) => {
-      console.log("API RESPONSE", response);
-      console.log("USER TEXT", userText);
-      console.log("API RESPONSE FOR STATE", response.data[0]);
-      console.log("SUBMIT", submit);
-
-      // This timeout was added only to demonstrate a 'loading' feature for the api that I worked on.  It would be removed for production build.
-      setTimeout(() => {
-
-        if (response.data.length === 0) {
-          setFlaggedToggle('Clean');
-        } else {
-          setFlaggedToggle('Flagged');
-          setUrl(response.data[0]);
+    // Conditional logic to call api only when form submission occurs, not on page load
+    if (submitToggle === 1) {
+      
+      axios({
+        method: 'GET',
+        url: 'https://phishstats.info:2096/api/phishing',
+        dataResponse: 'json',
+        params: {
+          _where: `(url,eq,${submit})`,
+          _sort: '-id'
         }
-        
-        setUserText("");
-        
-        // --- For Loading Notification ---
-        setLoading(false);
-        
-        setSubmitToggle(0);
-      }, 3000);
-    });
-  } }, [submit, userText, submitToggle]);
+      }).then( (response) => {
+        console.log("API RESPONSE", response);
+        console.log("USER TEXT", userText);
+        console.log("API RESPONSE FOR STATE", response.data[0]);
+        console.log("SUBMIT", submit);
+
+        // This timeout was added only to demonstrate a 'loading' feature for the api that I worked on.  It would be removed for production build.
+        setTimeout(() => {
+
+          // Conditional logic to render a clean address if no results are returned, or a flagged address if otherwise.
+            // Also setting the stateful variable of url to the first result of the flagged address
+          if (response.data.length === 0) {
+            setFlaggedToggle('Clean');
+          } else {
+            setFlaggedToggle('Flagged');
+            setUrl(response.data[0]);
+          }
+          
+          // Resetting text input field and toggles
+          setUserText("");
+          setLoading(false);
+          setSubmitToggle(0);
+
+        }, 2000);
+      });
+    } }, [submitToggle]);
 
 
   return (
-    // Using a fractional to add multiple unrelated elements
     <>
       <div className="background">
         <header>
@@ -160,22 +135,18 @@ const App = () => {
               <input type="text" onChange={ handleChange } value={ userText} id="searchUrl" className="searchUrlInput" placeholder="Example: https://www.apple.com"></input>
               <button type="submit">Is this Website Phishy?</button>
             </form>
+            {/* Rendering certain messages to user based on stateful variables */}
             { needUrl ? <p className="needText">Try using a full address (e.g. <em>http</em>...)</p> : <p className="displayNone">Nothing</p> }
             { needText ? <p className="needText">Enter your url above!</p> : <p className="displayNone">Nothing</p> }
-            { submit && !needText && !needUrl ? <LoadingArrow isLoading={isLoading} /> : <p className="displayNone">Nothing</p> }
+            { submit && !needText && !needUrl ? <LoadingMessage isLoading={isLoading} /> : <p className="displayNone">Nothing</p> }
           </div>
         </section>
-
-      
-
       </div>
 
+      {/* Using Output as a parent component to provide uniform template for Flagged and Clean children components */}
       <Output>
         {
-          // urlData.flagged === true ? <Flagged urlObject={urlData} /> : <Clean urlAddress={urlData.urlAddress} />
-          // urlData.flagged === true ? <Flagged urlAddress={urlData.urlAddress} country={urlData.country} city={urlData.city} score={urlData.score} timesFlagged={urlData.timesFlagged} virus={urlData.virus}/> : <Clean urlAddress={urlData.urlAddress} />
-          // url ? <Flagged urlAddress={url}/> : <Clean urlAddress={url} />
-
+          // Rendering whether address is flagged or clean based on stateful variables, and passing properties from url object as props
           submit && flaggedToggle === 'Flagged' ? <Flagged urlAddress={url.url} country={url.countryname} city={url.city} score={url.score} timesFlagged={url.n_times_seen_ip} virus={url.virus_total} /> : submit && flaggedToggle === 'Clean' ? <Clean urlAddress={submit} /> : <p className="displayNone">Nothing</p>
         }
       </Output>
@@ -185,15 +156,6 @@ const App = () => {
 }
 
 export default App;
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato&family=Raleway:wght@600&display=swap');
-
 html{
   line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}button,html [type=button],[type=reset],[type=submit]{-webkit-appearance:button}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}
 
@@ -10,22 +8,11 @@ html{
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; border: 0; padding: 0; white-space: nowrap; clip-path: inset(100%); clip: rect(0 0 0 0); overflow: hidden;}
 
 
+/* ======================
+IMPORTS
+=========================*/
 
-
-/* Style guide:
-
-header    [ bk color: blue ]
-    h1 - Phishing net    [ font: Raleway 600, 80px, black ]
-    h2 - Description [ font: Lato 400, 60px, black ]
-    p - Created at Juno with PhishStatus API [ font: Lato 400, 40px, black ] 
-
-input    [ bk color: white ]
-    h2 - "provide your url"    [ font: Lato 400, 40px, black ]
-    input form    [  font: Lato 400, 40px, black ]
-    button - submit    [ bk color of box: blue // font: Raleway 600, 40px, black ]
-
-output    [ bk color: blue ]
-    p clean/flagged    [ bk: white/blue; font: Lato 400, 40px, black ] */
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Raleway:wght@600&display=swap');
 
 
 /* ======================
@@ -54,7 +41,6 @@ button {
 }
 
 
-
 /* ======================
 GENERAL STYLING
 =========================*/
@@ -76,6 +62,7 @@ h1, h2, p, button, label {
 }
 
 button {
+  border: none;
   color: black;
 }
 
@@ -83,18 +70,10 @@ section {
     padding: 3rem 0;
 }
 
-button {
-    border: none;
-}
-
 a {
   text-decoration: none;
   font-weight: 600;
   color: white;
-}
-
-.output p {
-  color: black;
 }
 
 .displayNone {
@@ -104,10 +83,10 @@ a {
 .background {
   background: url('https://images.unsplash.com/photo-1527515234283-d93c5f8486a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=626&q=80') center;
   background-size: cover;
-  background-color: rgba(161, 74, 74, 0.2);
+  background-color: rgba(161, 74, 74, 0.3);
   background-blend-mode: multiply;
-
 }
+
 
 /* ======================
 HEADER
@@ -129,8 +108,6 @@ h1 {
   text-shadow:
     0 0 7px rgb(143, 188, 209),
     0 0 10px rgb(195, 197, 228),
-    /* 0 0 21px rgb(118, 125, 184),
-    0 0 42px rgb(105, 228, 187), */
     0 0 82px rgb(134, 196, 238),
     0 0 92px rgb(100, 147, 209),
     0 0 102px #0fa,
@@ -144,7 +121,6 @@ DESCRIPTION
 
 .description {
   padding: 1rem 0;
-  /* background-color: rgba(52, 131, 155, 0.8); */
 }
 
 .description .wrapper {
@@ -152,11 +128,8 @@ DESCRIPTION
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-}
-
-.description h2 {
   text-align: center;
+  align-items: center;
 }
 
 .description h2 span {
@@ -165,7 +138,6 @@ DESCRIPTION
 
 .description p {
   margin-top: 1rem;
-  text-align: center;
 }
 
 /* ======================
@@ -173,7 +145,6 @@ INPUT
 =========================*/
 
 .input {
-  /* background: rgba(52, 131, 155, 0.8); */
   padding: 2rem 0 14em 0;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgb(63, 150, 177));
   background-blend-mode: multiply;
@@ -192,20 +163,21 @@ INPUT
 
 input[type=text] {
   margin-top: 1rem;
-  width: 40%;
+  width: 22rem;
   padding: 0.5rem 0 0.5rem 0.5rem;
 }
 
 button {
-  cursor: pointer;
-  margin-top: 1rem;
-  padding: 0.4rem 1rem;
+  /* This button was inspired by Juno instructor Paul Rocca */
   position: relative;
+  top: 0;
+  margin-top: 1.1rem;
+  padding: 0.4rem 1rem;
   border-radius: 5px;
+  cursor: pointer;
+  transition: 0.2s;
   background:rgb(146, 206, 218);
 	box-shadow: 0px 10px 0px #105864;
-  top: 0;
-  transition: 0.2s;
 }
 
 button:hover {
@@ -219,13 +191,21 @@ button:active {
 
 .needText {
   position: absolute;
-  top: 14rem;
+  top: 15.5rem;
   left: 50%;
-  font-size: 2rem;
+  font-size: 2.2rem;
   text-align: center;
   transform: translate(-50%, -50%);
 }
 
+.loadingFound {
+  position: absolute;
+  top: 15.5rem;
+  left: 50%;
+  font-size: 2.2rem;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
 
 .loadingFlash {
   position: absolute;
@@ -237,35 +217,11 @@ button:active {
   animation: flickerAnimation 1s infinite;
 }
 
-/* This animation was inspired by: https://codepen.io/engsiang/pen/eWeNOP */
 @keyframes flickerAnimation {
+  /* This animation was inspired by: https://codepen.io/engsiang/pen/eWeNOP */
   0%   { opacity:1; }
   50%  { opacity:0; }
   100% { opacity:1; }
-}
-
-
-.loadingFound {
-  position: absolute;
-  top: 15.5rem;
-  left: 50%;
-  font-size: 2.2rem;
-  text-align: center;
-  transform: translate(-50%, -50%);
-}
-
-
-.loadingArrow {
-  /* position: absolute;
-  top: 14rem;
-  left: 50%;
-  width: 0; 
-  height: 0; 
-  border-left: 50px solid transparent;
-  border-right: 50px solid transparent;
-  border-top: 50px solid #f00;
-  transform: translate(-50%, -50%);
-  animation: flickerAnimation 1s infinite; */
 }
 
 /* ======================
@@ -273,12 +229,12 @@ OUTPUT
 =========================*/
 
 .output {
-  /* background: url('https://images.unsplash.com/photo-1624114594904-525bcde449f5?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTYyfHxkZWVwJTIwdW5kZXJ3YXRlcnxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=60') center;
-  background-size: cover; */
-  /* background: linear-gradient(rgba(255,255,255,0), rgba(255, 255, 255, 0.9)); */
-  /* margin-top: -5rem; */
-  background: rgb(63, 150, 177);
   padding-top: 0.5rem;
+  background: rgb(63, 150, 177);
+}
+
+.output p {
+  color: black;
 }
 
 .resultsGroup {
@@ -347,10 +303,6 @@ OUTPUT
 }
 
 
-
-
-
-
 /* ======================
 MEDIA QUERIES
 =========================*/ 
@@ -379,9 +331,12 @@ MEDIA QUERIES
   }
 
   input[type=text] {
-    width: 55%;
+    width: 18rem;
   }
 
+  .resultsGroup {
+    width: 20rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -394,21 +349,12 @@ MEDIA QUERIES
   }
 
   input[type=text] {
-    width: 75%;
+    width: 15.4rem;
   }
 
   .resultsGroup {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 1rem;
-  margin: 1rem auto 0 auto;
-  height: 12.5rem;
-  width: 15rem;
-  border-radius: 10px;
-  border: 4px solid black;
-}
+    width: 15rem;
+  }
 
 }
 

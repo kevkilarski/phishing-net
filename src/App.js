@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 // importing components
+import LoadingArrow from './LoadingArrow.js';
 import Output from './Output.js';
 import Clean from './Clean.js';
 import Flagged from './Flagged.js';
@@ -13,7 +14,7 @@ const App = () => {
 
 
   // --- For Loading Notification ---
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
 
 
 
@@ -33,13 +34,18 @@ const App = () => {
   // // Utilizing useState Hook to store toggle for flagged urls
   // const [submitToggle, setSubmitToggle] = useState(false);
 
+  // Utilizing useState Hook to store toggle for whether text was entered
+  const [needText, setNeedText] = useState(false);
+
   // Utilizing useState Hook to store toggle for submission
   const [submit, setSubmit] = useState();
 
+  const [submitToggle, setSubmitToggle] = useState(0);
 
     const handleChange = (event) => {
       // console.log("Handle Change", event);
       console.log("it changed!");
+      console.log(event.target.value);
       setUserText(event.target.value);
     }
 
@@ -49,10 +55,33 @@ const App = () => {
     // Function to handle user input submission
     const handleSubmit = (event) => {
       event.preventDefault();
-      console.log("Handle Submit", event.target[0].value);
+      
+      const urlCheck = userText.substr(0,4);
+      console.log(urlCheck);
+
+      if (urlCheck !== "http") {
+        alert("That aint no url!");
+        setUserText("");
+      } else {
       // console.log(userText);
       // setUserText('');
-      setSubmit(userText);
+      if (userText) {
+        setSubmitToggle(1);
+        setNeedText(false);
+        // --- For Loading Notification ---
+        setLoading(true);
+        setSubmit(userText);
+      } else {
+        setNeedText(true);
+        // alert("Need text!");
+      }
+
+      
+      }
+
+
+
+
     }
 
 
@@ -62,9 +91,9 @@ const App = () => {
   // Utilizing useEffect Hook for API call, to render when necessary
   useEffect( () => {
 
-  if (submit) {
+  if (submitToggle === 1) {
     
- 
+
     axios({
       method: 'GET',
       url: 'https://phishstats.info:2096/api/phishing',
@@ -73,6 +102,7 @@ const App = () => {
         _where: `(url,eq,${submit})`,
         // _where: '(url,eq,https://applecloud-ma.com/)',
         // _where: '(url,eq,https://apple.com/)',
+        // _where: `(url,like,~${submit}~)`,
         _sort: '-id'
       }
     }).then( (response) => {
@@ -88,11 +118,15 @@ const App = () => {
         setUrl(response.data[0]);
       }
 
+      setUserText("");
+
+
       // --- For Loading Notification ---
       setLoading(false);
 
+      setSubmitToggle(0);
     });
-  } }, [submit]);
+  } }, [submit, userText, submitToggle]);
 
 
   return (
@@ -115,14 +149,18 @@ const App = () => {
         <section className="input">
           <div className="wrapper">
             <form onSubmit={handleSubmit} className="formUrl">
-              <label htmlFor="searchUrl">Please enter a URL:</label>
-              <input type="text" onChange={ handleChange } value={ userText} id="searchUrl" className="searchUrlInput" placeholder="Example: apple.com"></input>
+              <label htmlFor="searchUrl">Please Enter a URL:</label>
+              <input type="text" onChange={ handleChange } value={ userText} id="searchUrl" className="searchUrlInput" placeholder="Example: https://www.apple.com"></input>
               <button type="submit">Is this Website Phishy?</button>
             </form>
+            { needText ? <p className="needText">Enter your url above!</p> : <p className="displayNone">Nothing</p> }
+            { submit && !needText ? <LoadingArrow isLoading={isLoading} /> : <p className="displayNone">Nothing</p> }
           </div>
         </section>
 
-              </div>
+      
+
+      </div>
 
       <Output>
         {
@@ -130,7 +168,7 @@ const App = () => {
           // urlData.flagged === true ? <Flagged urlAddress={urlData.urlAddress} country={urlData.country} city={urlData.city} score={urlData.score} timesFlagged={urlData.timesFlagged} virus={urlData.virus}/> : <Clean urlAddress={urlData.urlAddress} />
           // url ? <Flagged urlAddress={url}/> : <Clean urlAddress={url} />
 
-          submit && flaggedToggle === 'Flagged' ? <Flagged isLoading={isLoading} urlAddress={url.url} country={url.countryname} city={url.city} score={url.score} timesFlagged={url.n_times_seen_ip} virus={url.virus_total} /> : submit && flaggedToggle === 'Clean' ? <Clean urlAddress={submit} /> : <p className="displayNone">Nothing</p>
+          submit && flaggedToggle === 'Flagged' ? <Flagged urlAddress={url.url} country={url.countryname} city={url.city} score={url.score} timesFlagged={url.n_times_seen_ip} virus={url.virus_total} /> : submit && flaggedToggle === 'Clean' ? <Clean urlAddress={submit} /> : <p className="displayNone">Nothing</p>
         }
       </Output>
 

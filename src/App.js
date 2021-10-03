@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 // importing components
-import LoadingMessage from './LoadingMessage.js';
+import StatusMessage from './StatusMessage.js';
 import Output from './Output.js';
 import Clean from './Clean.js';
 import Flagged from './Flagged.js';
@@ -28,14 +28,8 @@ const App = () => {
     // Storing toggle for flagged urls for phishing scams
     const [flaggedToggle, setFlaggedToggle] = useState('');
 
-    // Storing toggle for whether a blank text input was provided to proceed with form submission
-    const [needText, setNeedText] = useState(false);
-
-    // Storing toggle for whether a url-like text input was provided to proceed with form submission
-    const [needUrl, setNeedUrl] = useState(false);
-
-     // Storing toggle for loading notification
-    const [isLoading, setLoading] = useState(false);
+     // Storing variable that will trigger appropriate status message render
+    const [status, setStatus] = useState('');
 
 
   // Function to set userText state with user input
@@ -53,18 +47,12 @@ const App = () => {
 
     // Conditional logic to either require an http prefix, require entering any text, or submit the user text
     if (userText && urlCheck !== "http") {
-      setNeedUrl(true);
-      setNeedText(false);
-      setLoading(false);
+      setStatus('needUrl');
       setUserText("");
     } else if (!userText) {
-      setNeedUrl(false);
-      setNeedText(true);
-      setLoading(false);
+      setStatus('needText');
     } else {
-      setNeedUrl(false);
-      setNeedText(false);
-      setLoading(true);
+      setStatus('apiLoading');
       setSubmitToggle(1);
       setSubmit(userText);
     }
@@ -104,7 +92,7 @@ const App = () => {
           
           // Resetting text input field and toggles
           setUserText("");
-          setLoading(false);
+          setStatus('apiComplete');
           setSubmitToggle(0);
 
         }, 2000);
@@ -135,10 +123,8 @@ const App = () => {
               <input type="text" onChange={ handleChange } value={ userText} id="searchUrl" className="searchUrlInput" placeholder="Example: https://www.apple.com"></input>
               <button type="submit">Is this Website Phishy?</button>
             </form>
-            {/* Rendering certain messages to user based on stateful variables */}
-            { needUrl ? <p className="needText">Try using a full address (e.g. <em>http</em>...)</p> : <p className="displayNone">Nothing</p> }
-            { needText ? <p className="needText">Enter your url above!</p> : <p className="displayNone">Nothing</p> }
-            { submit && !needText && !needUrl ? <LoadingMessage isLoading={isLoading} /> : <p className="displayNone">Nothing</p> }
+            {/* Rendering status message to user */}
+            <StatusMessage status={status} />
           </div>
         </section>
       </div>
@@ -147,7 +133,15 @@ const App = () => {
       <Output>
         {
           // Rendering whether address is flagged or clean based on stateful variables, and passing properties from url object as props
-          submit && flaggedToggle === 'Flagged' ? <Flagged urlAddress={url.url} country={url.countryname} city={url.city} score={url.score} timesFlagged={url.n_times_seen_ip} virus={url.virus_total} /> : submit && flaggedToggle === 'Clean' ? <Clean urlAddress={submit} /> : <p className="displayNone">Nothing</p>
+          submit && flaggedToggle === 'Flagged' ? 
+            <Flagged 
+              urlAddress={url.url} 
+              country={url.countryname} 
+              city={url.city} 
+              score={url.score} 
+              virus={url.virus_total} /> : 
+            submit && flaggedToggle === 'Clean' ? 
+              <Clean urlAddress={submit} /> : null
         }
       </Output>
 

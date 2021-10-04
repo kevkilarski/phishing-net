@@ -5,7 +5,7 @@ function Clean({ urlItem }) {
         <p>
           <strong>CLEAN</strong>
         </p>
-        <p>No phishing scams reported.</p>
+        <p>No phishing scams reported</p>
       </div>
       <div className="resultsAddress cleanAddress">
         <p>{urlItem.cleanUrlAddress}</p>
@@ -13,6 +13,7 @@ function Clean({ urlItem }) {
       <div className="resultsDetails cleanDetails">
         <p>Safe waters ahoy!</p>
       </div>
+        <p className="date"><em>Date: {urlItem.date}</em></p>
     </li>
   );
 }

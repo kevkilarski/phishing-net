@@ -1,33 +1,32 @@
-function Flagged({urlItem}) {
-
+function Flagged(props) {
 
     return (
-      <li key={urlItem.key} className="resultsGroup flaggedGroup">
+      <li key={props.urlItem.key} className="resultsGroup flaggedGroup">
           <div className="resultsTitle flaggedTitle">
-            <p>
-              <strong>FLAGGED</strong>
-            </p>
+            <p><strong>FLAGGED</strong></p>
             <p>Phishing scams reported!</p>
           </div>
           <div className="resultsAddress flaggedAddress">
-            <p>{urlItem.urlAddress}</p>
+            <p>{props.urlItem.urlAddress}</p>
           </div>
           <div className="resultsDetails flaggedDetails">
             <p>Country</p>
-            {urlItem.country == null ? <p>N/A</p> : <p>{urlItem.country}</p>}
+            {props.urlItem.country == null ? <p>N/A</p> : <p>{props.urlItem.country}</p>}
           </div>
           <div className="resultsDetails flaggedDetails">
             <p>City</p>
-            {urlItem.city == null ? <p>N/A</p> : <p>{urlItem.city}</p>}
+            {props.urlItem.city == null ? <p>N/A</p> : <p>{props.urlItem.city}</p>}
           </div>
           <div className="resultsDetails flaggedDetails">
             <p>Viruses as well?</p>
-            {urlItem.virus == null ? <p>N/A</p> : <p>{urlItem.virus}</p>}
+            {props.urlItem.virus == null ? <p>N/A</p> : <p>{props.urlItem.virus}</p>}
           </div>
           <div className="resultsDetails flaggedDetails">
             <p>Threat Score (0-10)</p>
-            {urlItem.score == null ? <p>N/A</p> : <p>{urlItem.score}</p>}
+            {props.urlItem.score == null ? <p>N/A</p> : <p>{props.urlItem.score}</p>}
           </div>
+          <p className="date"><em>Date: {props.urlItem.date}</em></p>
+
       </li>
     );
 

@@ -26,7 +26,7 @@ const App = () => {
     const [userText, setUserText] = useState('');
     
     // Storing finalized text input for submission
-    const [cleanUrl, setCleanUrl] = useState('');
+    const [first, setFirst] = useState();
 
     // Storing toggle for submission event (used for error handling, otherwise a duplicate text input submission would not trigger useEffect)
     const [submitToggle, setSubmitToggle] = useState(0);
@@ -100,6 +100,13 @@ const App = () => {
         // This timeout was added only to demonstrate a 'loading' feature for the api that I worked on.  It would be removed for production build.
         setTimeout(() => {
 
+
+            const date = new Date();
+            const dateFormatted = date.toString().substr(0, 15);
+            console.log(dateFormatted);
+
+
+
           if (response.data.length === 0) {
             // setFlaggedToggle('Clean');
             // setCleanUrl(userText);
@@ -107,22 +114,23 @@ const App = () => {
 
             newTest.cleanIndicator = 'yes';
             newTest.cleanUrlAddress = userText;
+            newTest.date = dateFormatted;
 
             push(dbRef, newTest);
 
           } else {
-            // setFlaggedToggle('Flagged');
 
-            // const apiRevisedObject = {};
-            // apiRevisedObject.key = response.data[0].id;
-            // apiRevisedObject.urlAddress = response.data[0].url;
-            // apiRevisedObject.country = response.data[0].countryname;
-            // apiRevisedObject.city = response.data[0].city;
-            // apiRevisedObject.virus = response.data[0].virus_total;
-            // apiRevisedObject.score = response.data[0].score;
-            // setUrlData(apiRevisedObject);
-            // push(dbRef, urlData);
-            push(dbRef, response.data[0]);
+            let apiRevisedObject = {};
+            apiRevisedObject.key = response.data[0].id;
+            apiRevisedObject.url = response.data[0].url;
+            apiRevisedObject.countryname = response.data[0].countryname;
+            apiRevisedObject.city = response.data[0].city;
+            apiRevisedObject.virus_total = response.data[0].virus_total;
+            apiRevisedObject.score = response.data[0].score;
+            apiRevisedObject.date = dateFormatted;
+
+            push(dbRef, apiRevisedObject);
+            // push(dbRef, response.data[0]);
           }
           
           // Setting text input field and toggles
@@ -130,7 +138,7 @@ const App = () => {
           setStatus('apiComplete');
 
 
-        }, 1000);
+        }, 2000);
 
       })
     
@@ -205,15 +213,16 @@ const App = () => {
           virus: urlReactDB[item].virus_total,
           score: urlReactDB[item].score,
           cleanIndicator: urlReactDB[item].cleanIndicator,
-          cleanUrlAddress: urlReactDB[item].cleanUrlAddress
+          cleanUrlAddress: urlReactDB[item].cleanUrlAddress,
+          date: urlReactDB[item].date
         }
 
         urlRenderArray.push(urlObjectBlock);
 
       }
 
-      const testing = urlRenderArray.reverse();
-      setUrlRenderList(testing);
+      // const testing = urlRenderArray.reverse();
+      setUrlRenderList(urlRenderArray);
 
     });
 }, []);
@@ -252,13 +261,13 @@ const App = () => {
       {/* Using Output as a parent component to provide uniform template for Flagged and Clean children components */}
       <section className="output">
         <div className="wrapper">
-          <ul>
+          <ul className="outputList">
               {
                 urlRenderList.map( (urlItem) => {
                   // <Flagged urlCity={urlItem.country} />
                   return (
                     
-                      urlItem.cleanIndicator === 'yes' ? <Clean urlItem={urlItem}/> : <Flagged urlItem={urlItem} />
+                      urlItem.cleanIndicator === 'yes' ? <Clean urlItem={urlItem}/> : <Flagged urlItem={urlItem} first={first}/>
 
                     
                   )

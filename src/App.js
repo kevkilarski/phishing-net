@@ -1,6 +1,8 @@
 // importing additional features
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import realtime from './firebase';
+import { ref, onValue, push } from 'firebase/database';
 import './App.css';
 
 // importing components
@@ -8,13 +10,17 @@ import StatusMessage from './StatusMessage.js';
 import Output from './Output.js';
 import Clean from './Clean.js';
 import Flagged from './Flagged.js';
+import TestFile from './TestFile.js';
 
 
 const App = () => {
 
   // useState Hooks
     // Storing object from each API call
-    const [urlData, setUrlData] = useState([]);
+    // const [urlData, setUrlData] = useState([]);
+
+    const [urlRenderList, setUrlRenderList] = useState([]);
+
     
     // Storing values of text input
     const [userText, setUserText] = useState('');
@@ -32,17 +38,34 @@ const App = () => {
     const [status, setStatus] = useState('');
 
 
+
+
+
+
+
+
   // Function to set userText state with user input
   const handleChange = (event) => {
     setUserText(event.target.value);
   }
 
 
+
+
+
+
+
+
+
   // Function to set userSubmit with userText, triggering api call
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Parsing beginning of user text to determine if a full url is provided
+            const dbRef = ref(realtime);
+
+
+
+   // Parsing beginning of user text to determine if a full url is provided
     const urlCheck = userText.substr(0,4);
 
     // Conditional logic to either require an http prefix, require entering any text, or submit the user text
@@ -53,65 +76,147 @@ const App = () => {
       setStatus('needText');
     } else {
       setStatus('apiLoading');
-      setSubmitToggle(1);
-      // setSubmit(userText);
-    }
-  }
 
-  // useEffect Hook for API call
-  useEffect( () => {
+      // const dbRef = ref(realtime);
+      // push(dbRef, userText);
 
-    // Conditional logic to call api only when form submission occurs, not on page load
-    if (submitToggle === 1) {
-      
-      axios({
-        method: 'GET',
-        url: 'https://phishstats.info:2096/api/phishing',
-        dataResponse: 'json',
-        params: {
-          _where: `(url,eq,${userText})`,
-          _sort: '-id'
-        }
+
+    
+
+
+
+
+
+    axios({
+      method: 'GET',
+      url: 'https://phishstats.info:2096/api/phishing',
+      dataResponse: 'json',
+      params: {
+        _where: `(url,eq,${userText})`,
+        _sort: '-id'
+      }
       }).then( (response) => {
-        console.log("API RESPONSE", response);
-        console.log("USER TEXT", userText);
-        console.log("API RESPONSE FOR STATE", response.data[0]);
-        // console.log("SUBMIT", submit);
 
         // This timeout was added only to demonstrate a 'loading' feature for the api that I worked on.  It would be removed for production build.
         setTimeout(() => {
 
-          // Conditional logic to render a clean address if no results are returned, or a flagged address if otherwise.
-            // If flagged, setting urlData to the first result of the flagged address
-            // If clean, setting cleanUrl to be rendered without alteration by the text field
-          // if (response.data.length === 0) {
-          //   setFlaggedToggle('Clean');
-          //   setCleanUrl(userText);
-          // } else {
-          //   setFlaggedToggle('Flagged');
-          //   setUrlData(response.data[0]);
-          // }
-
           if (response.data.length === 0) {
-            setFlaggedToggle('Clean');
-            setCleanUrl(userText);
+            // setFlaggedToggle('Clean');
+            // setCleanUrl(userText);
+            let newTest = {};
+
+            newTest.cleanIndicator = 'yes';
+            newTest.cleanUrlAddress = userText;
+
+            push(dbRef, newTest);
+
           } else {
-            setFlaggedToggle('Flagged');
-            urlData.urlAddress = response.data[0].url;
-            urlData.country = response.data[0].countryname;
-            urlData.city = response.data[0].city;
-            urlData.virus = response.data[0].virus_total;
-            urlData.score = response.data[0].score;
+            // setFlaggedToggle('Flagged');
+
+            // const apiRevisedObject = {};
+            // apiRevisedObject.key = response.data[0].id;
+            // apiRevisedObject.urlAddress = response.data[0].url;
+            // apiRevisedObject.country = response.data[0].countryname;
+            // apiRevisedObject.city = response.data[0].city;
+            // apiRevisedObject.virus = response.data[0].virus_total;
+            // apiRevisedObject.score = response.data[0].score;
+            // setUrlData(apiRevisedObject);
+            // push(dbRef, urlData);
+            push(dbRef, response.data[0]);
           }
           
-          // Resetting text input field and toggles
+          // Setting text input field and toggles
           setUserText("");
           setStatus('apiComplete');
-          setSubmitToggle(0);
 
-        }, 2000);
-      });
-    } }, [submitToggle]);
+
+        }, 1000);
+
+      })
+    
+      };
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // // Parsing beginning of user text to determine if a full url is provided
+    // const urlCheck = userText.substr(0,4);
+
+    // // Conditional logic to either require an http prefix, require entering any text, or submit the user text
+    // if (userText && urlCheck !== "http") {
+    //   setStatus('needUrl');
+    //   setUserText("");
+    // } else if (!userText) {
+    //   setStatus('needText');
+    // } else {
+    //   setStatus('apiLoading');
+    //   setSubmitToggle(1);
+
+    //   // const dbRef = ref(realtime);
+    //   // push(dbRef, userText);
+
+
+    // }
+  
+
+
+
+
+
+
+
+
+
+  // useEffect Hook for API call
+  useEffect( () => {
+
+    const dbRef = ref(realtime);
+
+    onValue(dbRef, (snapshot) => {
+
+      const urlReactDB = snapshot.val();
+      console.log("URL COLLECTION", urlReactDB);
+
+      const urlRenderArray = [];
+
+      for (let item in urlReactDB) {
+
+        const urlObjectBlock = {
+          key: item,
+          urlAddress: urlReactDB[item].url,
+          country: urlReactDB[item].countryname,
+          city: urlReactDB[item].city,
+          virus: urlReactDB[item].virus_total,
+          score: urlReactDB[item].score,
+          cleanIndicator: urlReactDB[item].cleanIndicator,
+          cleanUrlAddress: urlReactDB[item].cleanUrlAddress
+        }
+
+        urlRenderArray.push(urlObjectBlock);
+
+      }
+
+      setUrlRenderList(urlRenderArray);
+
+    });
+}, []);
+
 
 
   return (
@@ -144,12 +249,72 @@ const App = () => {
       </div>
 
       {/* Using Output as a parent component to provide uniform template for Flagged and Clean children components */}
-      <Output>
+      <section className="output">
+        <div className="wrapper">
+          <ul>
+            <p>{urlRenderList.city}</p>
+              {
+                urlRenderList.map( (urlItem) => {
+                  // <Flagged urlCity={urlItem.country} />
+                  return (
+                    
+                      urlItem.cleanIndicator === 'yes' ? <Clean urlItem={urlItem}/> : <Flagged urlItem={urlItem} />
+
+                    
+                  )
+
+                  // return (
+                  //   // <p>{urlItem.country}</p>
+                  //   )
+                })
+              }
+          </ul>
+        </div>
+    </section>
         {
           // Rendering whether address is flagged or clean based on stateful variables, and passing properties from url object as props
-          flaggedToggle === 'Flagged' ? <Flagged urlData={urlData} status={status}/> : flaggedToggle === 'Clean' ? <Clean urlAddress={cleanUrl} /> : null
+          // flaggedToggle === 'Flagged' ? <Flagged urlData={urlRenderList}/> : flaggedToggle === 'Clean' ? <Clean urlAddress={cleanUrl} /> : null
         }
-      </Output>
+
+{/* 
+        <ul>
+          {
+            urlRenderList.map((item) => {
+
+              return (
+                <div className="resultsGroup flaggedGroup">
+                  <div className="resultsTitle flaggedTitle">
+                      <p><strong>FLAGGED</strong></p>
+                      <p>Phishing scams reported!</p>
+                  </div>
+                  <div className="resultsAddress flaggedAddress">
+                      <p>{item.urlAddress}</p>
+                  </div>
+                  <div className="resultsDetails flaggedDetails">
+                      <p>Country</p>
+                      { item.country == null ? <p>N/A</p> : <p>{item.country}</p> }
+                  </div>
+                  <div className="resultsDetails flaggedDetails">
+                      <p>City</p>
+                      { item.city == null ? <p>N/A</p> : <p>{item.city}</p> }
+                  </div>
+                  <div className="resultsDetails flaggedDetails">
+                      <p>Viruses as well?</p>
+                      { item.virus == null ? <p>N/A</p> : <p>{item.virus}</p> }
+                  </div>
+                  <div className="resultsDetails flaggedDetails">
+                      <p>Threat Score (0-10)</p>
+                      { item.score == null ? <p>N/A</p> : <p>{item.score}</p> }
+                  </div>
+                </div>
+              )
+          })
+
+        }
+    </ul> */}
+
+    {/* </Output> */}
+
 
     </>
   );

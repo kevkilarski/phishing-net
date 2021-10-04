@@ -212,7 +212,8 @@ const App = () => {
 
       }
 
-      setUrlRenderList(urlRenderArray);
+      const testing = urlRenderArray.reverse();
+      setUrlRenderList(testing);
 
     });
 }, []);
@@ -252,7 +253,6 @@ const App = () => {
       <section className="output">
         <div className="wrapper">
           <ul>
-            <p>{urlRenderList.city}</p>
               {
                 urlRenderList.map( (urlItem) => {
                   // <Flagged urlCity={urlItem.country} />

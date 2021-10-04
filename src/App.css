@@ -290,7 +290,7 @@ OUTPUT
 
 .cleanDetails {
   flex-direction: column;
-  margin: 2rem 0;
+  margin: 1.6rem 0;
   font-size: 2rem;
 }
 
@@ -350,6 +350,12 @@ MEDIA QUERIES
 
   .resultsGroup {
     width: 15rem;
+  }
+
+  .cleanDetails {
+    flex-direction: column;
+    margin: 1.3rem 0;
+    font-size: 1.5rem;
   }
 
 }

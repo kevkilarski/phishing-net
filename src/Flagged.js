@@ -2,34 +2,34 @@ function Flagged({urlItem}) {
 
 
     return (
-        <li key={urlItem.key}>
-            <div className="resultsGroup flaggedGroup">
-                <div className="resultsTitle flaggedTitle">
-                    <p><strong>FLAGGED</strong></p>
-                    <p>Phishing scams reported!</p>
-                </div>
-                <div className="resultsAddress flaggedAddress">
-                    <p>{urlItem.urlAddress}</p>
-                </div>
-                <div className="resultsDetails flaggedDetails">
-                    <p>Country</p>
-                    { urlItem.country == null ? <p>N/A</p> : <p>{urlItem.country}</p> }
-                </div>
-                <div className="resultsDetails flaggedDetails">
-                    <p>City</p>
-                    { urlItem.city == null ? <p>N/A</p> : <p>{urlItem.city}</p> }
-                </div>
-                <div className="resultsDetails flaggedDetails">
-                    <p>Viruses as well?</p>
-                    { urlItem.virus == null ? <p>N/A</p> : <p>{urlItem.virus}</p> }
-                </div>
-                <div className="resultsDetails flaggedDetails">
-                    <p>Threat Score (0-10)</p>
-                    { urlItem.score == null ? <p>N/A</p> : <p>{urlItem.score}</p> }
-                </div>
-            </div>
-        </li>
-                )
+      <li key={urlItem.key} className="resultsGroup flaggedGroup">
+          <div className="resultsTitle flaggedTitle">
+            <p>
+              <strong>FLAGGED</strong>
+            </p>
+            <p>Phishing scams reported!</p>
+          </div>
+          <div className="resultsAddress flaggedAddress">
+            <p>{urlItem.urlAddress}</p>
+          </div>
+          <div className="resultsDetails flaggedDetails">
+            <p>Country</p>
+            {urlItem.country == null ? <p>N/A</p> : <p>{urlItem.country}</p>}
+          </div>
+          <div className="resultsDetails flaggedDetails">
+            <p>City</p>
+            {urlItem.city == null ? <p>N/A</p> : <p>{urlItem.city}</p>}
+          </div>
+          <div className="resultsDetails flaggedDetails">
+            <p>Viruses as well?</p>
+            {urlItem.virus == null ? <p>N/A</p> : <p>{urlItem.virus}</p>}
+          </div>
+          <div className="resultsDetails flaggedDetails">
+            <p>Threat Score (0-10)</p>
+            {urlItem.score == null ? <p>N/A</p> : <p>{urlItem.score}</p>}
+          </div>
+      </li>
+    );
 
 
    

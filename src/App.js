@@ -1,117 +1,119 @@
 // importing additional features
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import './App.css';
+import axios from "axios";
+import realtime from "./firebase";
+import { useEffect, useState } from "react";
+import { ref, onValue, push } from "firebase/database";
+import "./App.css";
 
 // importing components
-import StatusMessage from './StatusMessage.js';
-import Output from './Output.js';
-import Clean from './Clean.js';
-import Flagged from './Flagged.js';
-
+import StatusMessage from "./StatusMessage.js";
+import Clean from "./Clean.js";
+import Flagged from "./Flagged.js";
 
 const App = () => {
 
-  // useState Hooks
-    // Storing object from each API call
-    const [urlData, setUrlData] = useState([]);
-    
-    // Storing values of text input
-    const [userText, setUserText] = useState('');
-    
-    // Storing finalized text input for submission
-    const [cleanUrl, setCleanUrl] = useState('');
-
-    // Storing toggle for submission event (used for error handling, otherwise a duplicate text input submission would not trigger useEffect)
-    const [submitToggle, setSubmitToggle] = useState(0);
-
-    // Storing toggle for flagged urls for phishing scams
-    const [flaggedToggle, setFlaggedToggle] = useState('');
-
-     // Storing variable that will trigger appropriate status message render
-    const [status, setStatus] = useState('');
+  // Storing api infomation for render
+  const [urlRenderList, setUrlRenderList] = useState([]);
+  // Storing values of text input
+  const [userText, setUserText] = useState("");
+  // Storing variable that will trigger appropriate status message render
+  const [status, setStatus] = useState("");
 
 
-  // Function to set userText state with user input
+  // useEffect hook for firebase subscription
+  useEffect(() => {
+    const dbRef = ref(realtime);
+
+    onValue(dbRef, (snapshot) => {
+      const urlReactDB = snapshot.val();
+
+      const urlRenderArray = [];
+
+      for (let item in urlReactDB) {
+        const urlObjectBlock = {
+          key: item,
+          urlAddress: urlReactDB[item].url,
+          country: urlReactDB[item].countryname,
+          city: urlReactDB[item].city,
+          virus: urlReactDB[item].virus_total,
+          score: urlReactDB[item].score,
+          cleanIndicator: urlReactDB[item].cleanIndicator,
+          cleanUrlAddress: urlReactDB[item].cleanUrlAddress,
+          date: urlReactDB[item].date,
+        };
+
+        urlRenderArray.push(urlObjectBlock);
+      }
+
+      setUrlRenderList(urlRenderArray);
+    });
+  }, []);
+
+
+  // Function to set userText stateful variable with user input
   const handleChange = (event) => {
     setUserText(event.target.value);
-  }
+  };
 
 
-  // Function to set userSubmit with userText, triggering api call
+  // Function to call api upon form submission and send pertinent api data to firebase
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Parsing beginning of user text to determine if a full url is provided
-    const urlCheck = userText.substr(0,4);
+    const dbRef = ref(realtime);
+
+    // Parsing user text to determine if a full url is provided
+    const urlCheck = userText.substr(0, 4);
 
     // Conditional logic to either require an http prefix, require entering any text, or submit the user text
     if (userText && urlCheck !== "http") {
-      setStatus('needUrl');
+      setStatus("needUrl");
       setUserText("");
     } else if (!userText) {
-      setStatus('needText');
+      setStatus("needText");
     } else {
-      setStatus('apiLoading');
-      setSubmitToggle(1);
-      // setSubmit(userText);
-    }
-  }
-
-  // useEffect Hook for API call
-  useEffect( () => {
-
-    // Conditional logic to call api only when form submission occurs, not on page load
-    if (submitToggle === 1) {
+      setStatus("apiLoading");
       
       axios({
-        method: 'GET',
-        url: 'https://phishstats.info:2096/api/phishing',
-        dataResponse: 'json',
+        method: "GET",
+        url: "https://phishstats.info:2096/api/phishing",
+        dataResponse: "json",
         params: {
           _where: `(url,eq,${userText})`,
-          _sort: '-id'
-        }
-      }).then( (response) => {
-        console.log("API RESPONSE", response);
-        console.log("USER TEXT", userText);
-        console.log("API RESPONSE FOR STATE", response.data[0]);
-        // console.log("SUBMIT", submit);
+          _sort: "-id",
+        },
+      }).then((response) => {
 
-        // This timeout was added only to demonstrate a 'loading' feature for the api that I worked on.  It would be removed for production build.
+        // This timeout was added only to demonstrate a 'loading' feature for the api that I worked on.  It would be removed for a production build.
         setTimeout(() => {
+          const date = new Date().toString().substr(0, 15);
 
-          // Conditional logic to render a clean address if no results are returned, or a flagged address if otherwise.
-            // If flagged, setting urlData to the first result of the flagged address
-            // If clean, setting cleanUrl to be rendered without alteration by the text field
-          // if (response.data.length === 0) {
-          //   setFlaggedToggle('Clean');
-          //   setCleanUrl(userText);
-          // } else {
-          //   setFlaggedToggle('Flagged');
-          //   setUrlData(response.data[0]);
-          // }
-
+          // If no objects found in the target api call, create 'clean' object to send to firebase. Otherwise, create 'flagged' object.
           if (response.data.length === 0) {
-            setFlaggedToggle('Clean');
-            setCleanUrl(userText);
+            let apiRevisedClean = {};
+            apiRevisedClean.cleanIndicator = true;
+            apiRevisedClean.cleanUrlAddress = userText;
+            apiRevisedClean.date = date;
+            push(dbRef, apiRevisedClean);
           } else {
-            setFlaggedToggle('Flagged');
-            urlData.urlAddress = response.data[0].url;
-            urlData.country = response.data[0].countryname;
-            urlData.city = response.data[0].city;
-            urlData.virus = response.data[0].virus_total;
-            urlData.score = response.data[0].score;
+            let apiRevisedFlagged = {};
+            apiRevisedFlagged.key = response.data[0].id;
+            apiRevisedFlagged.url = response.data[0].url;
+            apiRevisedFlagged.countryname = response.data[0].countryname;
+            apiRevisedFlagged.city = response.data[0].city;
+            apiRevisedFlagged.virus_total = response.data[0].virus_total;
+            apiRevisedFlagged.score = response.data[0].score;
+            apiRevisedFlagged.date = date;
+            push(dbRef, apiRevisedFlagged);
           }
-          
-          // Resetting text input field and toggles
-          setUserText("");
-          setStatus('apiComplete');
-          setSubmitToggle(0);
 
+          // Resetting text input and updating status
+          setUserText("");
+          setStatus("apiComplete");
         }, 2000);
       });
-    } }, [submitToggle]);
+    }
+  };
 
 
   return (
@@ -125,8 +127,8 @@ const App = () => {
 
         <section className="description">
           <div className="wrapper">
-              <h2>Tired of being lured by scammers? <span>Untangle yourself using this reel handy app!</span></h2>
-              <p>Created by Kevin Kilarski at <a href="https://junocollege.com/">Juno College</a> <span>using the <a href="https://phishstats.info/">PhishStas API</a></span></p>
+            <h2>Tired of being lured by scammers? <span>Untangle yourself using this reel handy app!</span></h2>
+            <p>Created by Kevin Kilarski at <a href="https://junocollege.com/">Juno College</a> <span>using the <a href="https://phishstats.info/">PhishStas API</a></span></p>
           </div>
         </section>
 
@@ -134,62 +136,34 @@ const App = () => {
           <div className="wrapper">
             <form onSubmit={handleSubmit} className="formUrl">
               <label htmlFor="searchUrl">Please Enter a URL:</label>
-              <input type="text" onChange={ handleChange } value={ userText} id="searchUrl" className="searchUrlInput" placeholder="Example: https://www.apple.com"></input>
+              <input
+                type="text"
+                onChange={handleChange}
+                value={userText}
+                id="searchUrl"
+                className="searchUrlInput"
+                placeholder="Example: https://www.apple.com"
+              />
               <button type="submit">Is this Website Phishy?</button>
             </form>
-            {/* Rendering status message to user */}
             <StatusMessage status={status} />
           </div>
         </section>
       </div>
 
-      {/* Using Output as a parent component to provide uniform template for Flagged and Clean children components */}
-      <Output>
-        {
-          // Rendering whether address is flagged or clean based on stateful variables, and passing properties from url object as props
-          flaggedToggle === 'Flagged' ? <Flagged urlData={urlData} status={status}/> : flaggedToggle === 'Clean' ? <Clean urlAddress={cleanUrl} /> : null
-        }
-      </Output>
-
+      <section className="output">
+        <div className="wrapper">
+          <ul className="outputList">
+            {
+              urlRenderList.map((urlItem) => {
+                return urlItem.cleanIndicator ? ( <Clean urlItem={urlItem} /> ) : ( <Flagged urlItem={urlItem} /> );
+              })
+            }
+          </ul>
+        </div>
+      </section>
     </>
   );
-}
+};
 
 export default App;
-
-
-
-
-// --Pseudocode--
-
-// Create landing Page that contains
-// - the header (title)
-// - text form submit button
-
-// Create Components
-// - input (enter url)
-// - output
-//     - clean message
-//     - suspicious message
-
-// Mount Components
-
-// Create State items to hold data for render
-// - user input
-// - PhishStats API
-
-// Add Event for 'submit' button, to pass infomation to userInput component
-
-// Add useEffect for condition for determining if clean or suspicious message will appear
-
-// Add props to Components
-// - cleanMessage
-//     - Condition for appearing or not
-//     - API json properties (Country of Origin, Times Identified as Phishing)
-// - suspiciousMessage
-//     - Condition for appearing or not
-//     - API json properties (Country of Origin, Times Identified as Phishing)
-
-// Render: Upon button press, send API information to useEffect
-// - pass API information to and render clean or suspicious component
-

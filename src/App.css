@@ -308,8 +308,6 @@ OUTPUT
 }
 
 
-
-
 /* ======================
 MEDIA QUERIES
 =========================*/ 
@@ -369,7 +367,6 @@ MEDIA QUERIES
     margin: 1.3rem 0;
     font-size: 1.5rem;
   }
-
 }
 
 @media (max-width: 350px) {

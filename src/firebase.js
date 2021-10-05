@@ -4,7 +4,6 @@ import { initializeApp } from "firebase/app";
 // IMPORT THE FUNCTION TO PULL IN THE FIREBASE REALTIME DATABASE SERVICE:
 import { getDatabase } from 'firebase/database';
 
-
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 

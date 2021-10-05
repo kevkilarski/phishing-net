@@ -11,7 +11,8 @@ function Clean(props) {
       <div className="resultsDetails cleanDetails">
         <p>Safe waters ahoy!</p>
       </div>
-        <p className="date"><em>Date: {props.urlItem.date}</em></p>
+      <p className="date"><em>Date: {props.urlItem.date}</em></p>
+      <button onClick={ props.deferrer }>Destroy!</button>
     </li>
   );
 }

@@ -172,7 +172,7 @@ input[type=text] {
   padding: 0.5rem 0 0.5rem 0.5rem;
 }
 
-button {
+.buttonSubmit {
   /* This button was inspired by Juno instructor Paul Rocca */
   position: relative;
   top: 0;
@@ -185,11 +185,11 @@ button {
 	box-shadow: 0px 10px 0px #105864;
 }
 
-button:hover {
+.buttonSubmit:hover {
   background:rgb(114, 173, 185);
 }
 
-button:active {
+.buttonSubmit:active {
     box-shadow: 0px 4px 0px #105864;
     top: 6px;
 }
@@ -305,6 +305,23 @@ OUTPUT
 .date {
   font-size: 1rem;
   margin-top: 0.9rem;
+}
+
+.buttonDelete {
+  position: absolute;
+  top: 0.1rem;
+  right: 0.1rem;
+  background-color: transparent;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.buttonDelete:hover {
+  color: white;
+}
+
+.fontAwesomeDelete:after {
+  background:transparent;
 }
 
 

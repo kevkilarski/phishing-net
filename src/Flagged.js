@@ -1,6 +1,10 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+
 function Flagged(props) {
   return (
-    <li key={props.urlItem.key} className="resultsGroup flaggedGroup">
+    <li className="resultsGroup flaggedGroup">
+
       <div className="resultsTitle flaggedTitle">
         <p><strong>FLAGGED</strong></p>
         <p>Phishing scams reported!</p>
@@ -25,7 +29,8 @@ function Flagged(props) {
         {props.urlItem.score == null ? <p>N/A</p> : <p>{props.urlItem.score}</p>}
       </div>
       <p className="date"><em>Date: {props.urlItem.date}</em></p>
-      <button onClick={ props.deferrer }>Destroy!</button>
+      <button onClick={ props.deferrer } className="buttonDelete"> <FontAwesomeIcon className="fontAwesomeDelete" icon={faTimesCircle} size="lg"/> </button>
+
     </li>
   );
 }

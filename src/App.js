@@ -5,10 +5,13 @@ import { useEffect, useState } from "react";
 import { ref, onValue, push, remove } from "firebase/database";
 import "./App.css";
 
+
+
 // importing components
 import StatusMessage from "./StatusMessage.js";
 import Clean from "./Clean.js";
 import Flagged from "./Flagged.js";
+import Output from "./Output.js";
 
 const App = () => {
 
@@ -90,13 +93,13 @@ const App = () => {
 
           // If no objects found in the target api call, create 'clean' object to send to firebase. Otherwise, create 'flagged' object.
           if (response.data.length === 0) {
-            let apiRevisedClean = {};
+            const apiRevisedClean = {};
             apiRevisedClean.cleanIndicator = true;
             apiRevisedClean.cleanUrlAddress = userText;
             apiRevisedClean.date = date;
             push(dbRef, apiRevisedClean);
           } else {
-            let apiRevisedFlagged = {};
+            const apiRevisedFlagged = {};
             apiRevisedFlagged.key = response.data[0].id;
             apiRevisedFlagged.url = response.data[0].url;
             apiRevisedFlagged.countryname = response.data[0].countryname;
@@ -149,7 +152,7 @@ const App = () => {
                 className="searchUrlInput"
                 placeholder="Example: https://www.apple.com"
               />
-              <button type="submit">Is this Website Phishy?</button>
+              <button type="submit" className="buttonSubmit">Is this Website Phishy?</button>
             </form>
             <StatusMessage status={status} />
           </div>
@@ -162,13 +165,18 @@ const App = () => {
             {
               urlRenderList.map((urlItem) => {
                 return urlItem.cleanIndicator ? 
-                ( <Clean urlItem={urlItem} deferrer={() => handleDelete(urlItem.key)} /> ) : 
-                ( <Flagged urlItem={urlItem} deferrer={() => handleDelete(urlItem.key)} /> );
+                ( <Clean urlItem={urlItem} key={urlItem.key} deferrer={() => handleDelete(urlItem.key)} /> ) : 
+                ( <Flagged urlItem={urlItem} key={urlItem.key} deferrer={() => handleDelete(urlItem.key)} /> );
               })
             }
           </ul>
         </div>
       </section>
+
+      {/* <Output urlRenderList={urlRenderList} deferrer={handleDelete}>
+        
+      </Output> */}
+
     </>
   );
 };

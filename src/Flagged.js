@@ -25,6 +25,7 @@ function Flagged(props) {
         {props.urlItem.score == null ? <p>N/A</p> : <p>{props.urlItem.score}</p>}
       </div>
       <p className="date"><em>Date: {props.urlItem.date}</em></p>
+      <button onClick={ props.deferrer }>Destroy!</button>
     </li>
   );
 }

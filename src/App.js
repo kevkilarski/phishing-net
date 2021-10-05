@@ -2,7 +2,7 @@
 import axios from "axios";
 import realtime from "./firebase";
 import { useEffect, useState } from "react";
-import { ref, onValue, push } from "firebase/database";
+import { ref, onValue, push, remove } from "firebase/database";
 import "./App.css";
 
 // importing components
@@ -115,6 +115,11 @@ const App = () => {
     }
   };
 
+  // Function to delete an item upon button click
+  const handleDelete = (keyOfItemToDelete) => {
+    const specificNodeRef = ref(realtime, keyOfItemToDelete); // Not refernecing the whole database, just a specific child node, and the second argument is a relative path inside our database to the node we wish to target
+    remove(specificNodeRef);
+  }
 
   return (
     <>
@@ -156,7 +161,9 @@ const App = () => {
           <ul className="outputList">
             {
               urlRenderList.map((urlItem) => {
-                return urlItem.cleanIndicator ? ( <Clean urlItem={urlItem} /> ) : ( <Flagged urlItem={urlItem} /> );
+                return urlItem.cleanIndicator ? 
+                ( <Clean urlItem={urlItem} deferrer={() => handleDelete(urlItem.key)} /> ) : 
+                ( <Flagged urlItem={urlItem} deferrer={() => handleDelete(urlItem.key)} /> );
               })
             }
           </ul>

@@ -8,9 +8,7 @@ import "./App.css";
 
 
 // importing components
-import StatusMessage from "./StatusMessage.js";
-import Clean from "./Clean.js";
-import Flagged from "./Flagged.js";
+import Input from "./Input.js";
 import Output from "./Output.js";
 
 const App = () => {
@@ -127,6 +125,7 @@ const App = () => {
   return (
     <>
       <div className="background">
+        
         <header>
           <div className="wrapper">
             <h1>Phishing Net</h1>
@@ -140,42 +139,18 @@ const App = () => {
           </div>
         </section>
 
-        <section className="input">
-          <div className="wrapper">
-            <form onSubmit={handleSubmit} className="formUrl">
-              <label htmlFor="searchUrl">Please Enter a URL:</label>
-              <input
-                type="text"
-                onChange={handleChange}
-                value={userText}
-                id="searchUrl"
-                className="searchUrlInput"
-                placeholder="Example: https://www.apple.com"
-              />
-              <button type="submit" className="buttonSubmit">Is this Website Phishy?</button>
-            </form>
-            <StatusMessage status={status} />
-          </div>
-        </section>
+        <Input 
+          handleSubmit={handleSubmit} 
+          handleChange={handleChange} 
+          userText={userText} 
+          status={status} 
+        />
       </div>
 
-      <section className="output">
-        <div className="wrapper">
-          <ul className="outputList">
-            {
-              urlRenderList.map((urlItem) => {
-                return urlItem.cleanIndicator ? 
-                ( <Clean urlItem={urlItem} key={urlItem.key} deferrer={() => handleDelete(urlItem.key)} /> ) : 
-                ( <Flagged urlItem={urlItem} key={urlItem.key} deferrer={() => handleDelete(urlItem.key)} /> );
-              })
-            }
-          </ul>
-        </div>
-      </section>
-
-      {/* <Output urlRenderList={urlRenderList} deferrer={handleDelete}>
-        
-      </Output> */}
+      <Output 
+        urlRenderList={urlRenderList}
+        handleDelete={handleDelete}
+      />
 
     </>
   );

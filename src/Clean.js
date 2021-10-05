@@ -2,9 +2,7 @@ function Clean(props) {
   return (
     <li key={props.urlItem.key} className="resultsGroup cleanGroup">
       <div className="resultsTitle cleanTitle">
-        <p>
-          <strong>CLEAN</strong>
-        </p>
+        <p><strong>CLEAN</strong></p>
         <p>No phishing scams reported</p>
       </div>
       <div className="resultsAddress cleanAddress">

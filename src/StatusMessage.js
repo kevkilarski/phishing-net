@@ -7,6 +7,10 @@ function StatusMessage({status}) {
         ( <p className="status statusFlashing">Checking the Net...</p> ) :
         status === 'apiComplete' ?
         ( <p className="status">See Your Catch Below!</p> ) : 
+        status === 'deletedItem' ?
+        ( <p className="status">You Cut The Line!</p> ) : 
+        status === 'previousItems' ?
+        ( <p className="status">You've Already Pulled In Something!</p> ) : 
         null;
 }
 

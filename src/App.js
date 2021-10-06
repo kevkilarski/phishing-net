@@ -49,6 +49,9 @@ const App = () => {
           count: counter
         };
         counter = counter + 1;
+        if (counter === 2) {
+          setStatus('previousItems');
+        }
         urlRenderArray.push(urlObjectBlock);
       }
       setUrlRenderList(urlRenderArray);
@@ -126,6 +129,7 @@ const App = () => {
   const handleDelete = (keyOfItemToDelete) => {
     const specificNodeRef = ref(realtime, keyOfItemToDelete);
     remove(specificNodeRef);
+    setStatus("deletedItem");
   }
 
   return (

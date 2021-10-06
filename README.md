@@ -1,4 +1,4 @@
-# Phishing Net
+# The Phishing Net
 
 This application is designed to identify if a user-selected website has been flagged for phishing scams
 

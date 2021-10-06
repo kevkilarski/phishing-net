@@ -1,22 +1,28 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
-function Clean(props) {
+function Clean({urlItem, deferrer}) {
   return (
 
-    <li key={props.urlItem.key} className="resultsItem cleanItem">
+    <li className="resultsItem cleanItem">
 
       <p className="resultsTitle cleanTitle"><strong>CLEAN</strong></p>
       <p className="resultsReport cleanReport">No phishing scams reported</p>
 
       <div className="resultsAddress cleanAddress">
-        <p>{props.urlItem.cleanUrlAddress}</p>
+        <p>{urlItem.cleanUrlAddress}</p>
       </div>
 
       <p className="resultsDetails cleanDetails">Safe waters ahoy!</p>
-      <p className="date"><em>Date: {props.urlItem.date}</em></p>
-      <button onClick={ props.deferrer } className="buttonDelete"><FontAwesomeIcon className="fontAwesomeDelete" icon={faTimesCircle} size="lg"/></button>
-      <p className="itemCount">{props.urlItem.count}</p>
+      <p className="date"><em>Date: {urlItem.date}</em></p>
+
+      <button onClick={ deferrer } className="buttonDelete">
+        <FontAwesomeIcon className="fontAwesomeDelete" icon={faTimesCircle} size="lg">
+          <span className="sr-only">Delete this item from the list</span>
+        </FontAwesomeIcon>
+      </button>
+
+      <p className="itemCount">{urlItem.count}</p>
       
     </li>
 

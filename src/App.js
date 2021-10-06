@@ -1,11 +1,14 @@
+// NOTES:
+  // Websites to test the app:
+    // Flagged: https://applecloud-ma.com/, http://apple.com-icloud.top/, http://microsoft-dateserver.com/
+    // Clean: https://www.apple.com, https://www.microsoft.com, https://junocollege.com
+
 // importing additional features
 import axios from "axios";
 import realtime from "./firebase";
 import { useEffect, useState } from "react";
 import { ref, onValue, push, remove } from "firebase/database";
 import "./App.css";
-
-
 
 // importing components
 import Input from "./Input.js";
@@ -28,6 +31,7 @@ const App = () => {
     onValue(dbRef, (snapshot) => {
       const urlReactDB = snapshot.val();
 
+      // Counter is used to index the nodes upon render
       let counter = 1;
       const urlRenderArray = [];
 
@@ -147,6 +151,7 @@ const App = () => {
           userText={userText} 
           status={status} 
         />
+
       </div>
 
       <Output 

@@ -130,7 +130,8 @@ header .wrapper {
 }
 
 h1 {
-  animation: flickerAnimationTitle 3.5s infinite;
+  text-align: center;
+  animation: flickerAnimationTitle 3.2s infinite;
 }
 
 @keyframes flickerAnimationTitle {
@@ -147,12 +148,12 @@ h1 {
   50% {
     text-shadow:
     0 0 10px rgb(195, 197, 228),
+    0 0 51px rgb(69, 88, 124),
     0 0 82px rgb(134, 196, 238),
     0 0 92px rgb(100, 147, 209),
     0 0 102px #0fa,
     0 0 151px rgb(99, 159, 214),
     0 0 251px rgb(50, 109, 165),
-    0 0 51px rgb(69, 88, 124),
     0 0 451px rgb(50, 109, 165);
   }
   100% {
@@ -228,7 +229,7 @@ input[type=text] {
   padding: 0.4rem 1rem;
   border-radius: 5px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.15s;
   background:rgb(146, 206, 218);
 	box-shadow: 0px 10px 0px #105864;
 }
@@ -302,15 +303,15 @@ OUTPUT
 }
 
 .flaggedItem {
-  background: url('https://images.unsplash.com/photo-1578499176758-1f7f9bb1d25b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80') center;
-  background-size: 400%;
+  background: url('https://images.unsplash.com/photo-1578499176758-1f7f9bb1d25b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80') right;
+  background-size: 300%;
   background-color: rgba(202, 34, 34, 0.4);
   background-blend-mode: multiply;
 }
 
 .cleanItem {
-  background: url('https://images.unsplash.com/photo-1578499176758-1f7f9bb1d25b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80') center;
-  background-size: 400%;
+  background: url('https://images.unsplash.com/photo-1578499176758-1f7f9bb1d25b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80') right;
+  background-size: 300%;
   background-color: rgba(35, 180, 120, 0.4);
   background-blend-mode: multiply;
 }
@@ -341,7 +342,7 @@ OUTPUT
 }
 
 .cleanAddress {
-  background-color: rgba(25, 189, 47, 0.8);
+  background-color: rgba(22, 185, 44, 0.8);
 }
 
 .resultsDetails {
@@ -378,7 +379,7 @@ OUTPUT
   top: -0.1rem;
   left: -0.05rem;
   border-radius: 15px 0 15px;
-  padding: 0.2rem 0.4rem 0.2rem 0.3rem;
+  padding: 0.15rem 0.4rem 0.3rem 0.3rem;
   background-color: black;
 }
 

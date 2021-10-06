@@ -1,27 +1,30 @@
 import StatusMessage from "./StatusMessage.js";
 
-function Input(props) {
-
+function Input({handleSubmit, handleChange, userText, status}) {
   return (
+
     <section className="input">
       <div className="wrapper">
-        <form onSubmit={props.handleSubmit} className="formUrl">
+
+        <form onSubmit={handleSubmit} className="formUrl">
           <label htmlFor="searchUrl">Please Enter a URL:</label>
           <input
             type="text"
-            onChange={props.handleChange}
-            value={props.userText}
+            onChange={handleChange}
+            value={userText}
             id="searchUrl"
             className="searchUrlInput"
             placeholder="Example: https://www.apple.com"
           />
           <button type="submit" className="buttonSubmit">Is this Website Phishy?</button>
         </form>
-        <StatusMessage status={props.status} />
+
+        <StatusMessage status={status} />
+
       </div>
     </section>
-  )
 
+  )
 }
 
 export default Input;

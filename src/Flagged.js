@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
-function Flagged(props) {
+function Flagged({urlItem, deferrer}) {
   return (
 
     <li className="resultsItem flaggedItem">
@@ -10,32 +10,38 @@ function Flagged(props) {
       <p className="resultsReport flaggedReport">Phishing scams reported!</p>
 
       <div className="resultsAddress flaggedAddress">
-        <p>{props.urlItem.urlAddress}</p>
+        <p>{urlItem.urlAddress}</p>
       </div>
 
       <div className="resultsDetails flaggedDetails">
         <p>Country</p>
-        {props.urlItem.country == null ? <p>N/A</p> : <p>{props.urlItem.country}</p>}
+        {urlItem.country == null ? <p>N/A</p> : <p>{urlItem.country}</p>}
       </div>
 
       <div className="resultsDetails flaggedDetails">
         <p>City</p>
-        {props.urlItem.city == null ? <p>N/A</p> : <p>{props.urlItem.city}</p>}
+        {urlItem.city == null ? <p>N/A</p> : <p>{urlItem.city}</p>}
       </div>
 
       <div className="resultsDetails flaggedDetails">
         <p>Viruses as well?</p>
-        {props.urlItem.virus == null ? <p>N/A</p> : <p>{props.urlItem.virus}</p>}
+        {urlItem.virus == null ? <p>N/A</p> : <p>{urlItem.virus}</p>}
       </div>
 
       <div className="resultsDetails flaggedDetails">
         <p>Threat Score (0-10)</p>
-        {props.urlItem.score == null ? <p>N/A</p> : <p>{props.urlItem.score}</p>}
+        {urlItem.score == null ? <p>N/A</p> : <p>{urlItem.score}</p>}
       </div>
 
-      <p className="date"><em>Date: {props.urlItem.date}</em></p>
-      <button onClick={ props.deferrer } className="buttonDelete"><FontAwesomeIcon className="fontAwesomeDelete" icon={faTimesCircle} size="lg"/></button>
-      <p className="itemCount">{props.urlItem.count}</p>
+      <p className="date"><em>Date: {urlItem.date}</em></p>
+
+      <button onClick={ deferrer } className="buttonDelete">
+        <FontAwesomeIcon className="fontAwesomeDelete" icon={faTimesCircle} size="lg">
+          <span className="sr-only">Delete this item from the list</span>
+        </FontAwesomeIcon>
+      </button>
+      
+      <p className="itemCount">{urlItem.count}</p>
       
     </li>
 

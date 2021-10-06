@@ -91,6 +91,7 @@ const App = () => {
           const date = new Date().toString().substr(0, 15);
 
           // If no objects found in the target api call, create 'clean' object to send to firebase. Otherwise, create 'flagged' object.
+          // I chose to deconstruct the api return because of the high number of properties retreived with each call.
           if (response.data.length === 0) {
             const apiRevisedClean = {};
             apiRevisedClean.cleanIndicator = true;
@@ -119,7 +120,7 @@ const App = () => {
 
   // Function to delete an item upon button click
   const handleDelete = (keyOfItemToDelete) => {
-    const specificNodeRef = ref(realtime, keyOfItemToDelete); // Not refernecing the whole database, just a specific child node, and the second argument is a relative path inside our database to the node we wish to target
+    const specificNodeRef = ref(realtime, keyOfItemToDelete);
     remove(specificNodeRef);
   }
 

@@ -4,9 +4,11 @@ import Flagged from "./Flagged.js";
 function Output(props) {
 
   return (
+
     <section className="output">
       <div className="wrapper">
-        <ul className="outputList">
+        <ul className="resultsList">
+
           {
             props.urlRenderList.map((urlItem) => {
               return urlItem.cleanIndicator ? 
@@ -14,9 +16,11 @@ function Output(props) {
               ( <Flagged urlItem={urlItem} key={urlItem.key} deferrer={() => props.handleDelete(urlItem.key)} /> );
             })
           }
+
         </ul>
       </div>
     </section>
+
   )
 
 }

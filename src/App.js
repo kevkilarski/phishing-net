@@ -5,10 +5,11 @@ import { useEffect, useState } from "react";
 import { ref, onValue, push, remove } from "firebase/database";
 import "./App.css";
 
+
+
 // importing components
-import StatusMessage from "./StatusMessage.js";
-import Clean from "./Clean.js";
-import Flagged from "./Flagged.js";
+import Input from "./Input.js";
+import Output from "./Output.js";
 
 const App = () => {
 
@@ -16,7 +17,7 @@ const App = () => {
   const [urlRenderList, setUrlRenderList] = useState([]);
   // Storing values of text input
   const [userText, setUserText] = useState("");
-  // Storing variable that will trigger appropriate status message render
+  // Storing variable that will trigger appropriate status message to user
   const [status, setStatus] = useState("");
 
 
@@ -27,6 +28,7 @@ const App = () => {
     onValue(dbRef, (snapshot) => {
       const urlReactDB = snapshot.val();
 
+      let counter = 1;
       const urlRenderArray = [];
 
       for (let item in urlReactDB) {
@@ -40,11 +42,11 @@ const App = () => {
           cleanIndicator: urlReactDB[item].cleanIndicator,
           cleanUrlAddress: urlReactDB[item].cleanUrlAddress,
           date: urlReactDB[item].date,
+          count: counter
         };
-
+        counter = counter + 1;
         urlRenderArray.push(urlObjectBlock);
       }
-
       setUrlRenderList(urlRenderArray);
     });
   }, []);
@@ -89,14 +91,15 @@ const App = () => {
           const date = new Date().toString().substr(0, 15);
 
           // If no objects found in the target api call, create 'clean' object to send to firebase. Otherwise, create 'flagged' object.
+          // I chose to deconstruct the api return because of the high number of properties retreived with each call.
           if (response.data.length === 0) {
-            let apiRevisedClean = {};
+            const apiRevisedClean = {};
             apiRevisedClean.cleanIndicator = true;
             apiRevisedClean.cleanUrlAddress = userText;
             apiRevisedClean.date = date;
             push(dbRef, apiRevisedClean);
           } else {
-            let apiRevisedFlagged = {};
+            const apiRevisedFlagged = {};
             apiRevisedFlagged.key = response.data[0].id;
             apiRevisedFlagged.url = response.data[0].url;
             apiRevisedFlagged.countryname = response.data[0].countryname;
@@ -117,16 +120,17 @@ const App = () => {
 
   // Function to delete an item upon button click
   const handleDelete = (keyOfItemToDelete) => {
-    const specificNodeRef = ref(realtime, keyOfItemToDelete); // Not refernecing the whole database, just a specific child node, and the second argument is a relative path inside our database to the node we wish to target
+    const specificNodeRef = ref(realtime, keyOfItemToDelete);
     remove(specificNodeRef);
   }
 
   return (
     <>
       <div className="background">
+        
         <header>
           <div className="wrapper">
-            <h1>Phishing Net</h1>
+            <h1>The Phishing Net</h1>
           </div>
         </header>
 
@@ -137,38 +141,19 @@ const App = () => {
           </div>
         </section>
 
-        <section className="input">
-          <div className="wrapper">
-            <form onSubmit={handleSubmit} className="formUrl">
-              <label htmlFor="searchUrl">Please Enter a URL:</label>
-              <input
-                type="text"
-                onChange={handleChange}
-                value={userText}
-                id="searchUrl"
-                className="searchUrlInput"
-                placeholder="Example: https://www.apple.com"
-              />
-              <button type="submit">Is this Website Phishy?</button>
-            </form>
-            <StatusMessage status={status} />
-          </div>
-        </section>
+        <Input 
+          handleSubmit={handleSubmit} 
+          handleChange={handleChange} 
+          userText={userText} 
+          status={status} 
+        />
       </div>
 
-      <section className="output">
-        <div className="wrapper">
-          <ul className="outputList">
-            {
-              urlRenderList.map((urlItem) => {
-                return urlItem.cleanIndicator ? 
-                ( <Clean urlItem={urlItem} deferrer={() => handleDelete(urlItem.key)} /> ) : 
-                ( <Flagged urlItem={urlItem} deferrer={() => handleDelete(urlItem.key)} /> );
-              })
-            }
-          </ul>
-        </div>
-      </section>
+      <Output 
+        urlRenderList={urlRenderList}
+        handleDelete={handleDelete}
+      />
+
     </>
   );
 };

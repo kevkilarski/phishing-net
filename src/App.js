@@ -138,7 +138,7 @@ const App = () => {
         
         <header>
           <div className="wrapper">
-            <h1>The Phishing Net</h1>
+            <h1>The <span className="displayBlock">Phishing</span> <span className="displayBlock">Net</span></h1>
           </div>
         </header>
 

@@ -17,7 +17,7 @@ const App = () => {
   const [urlRenderList, setUrlRenderList] = useState([]);
   // Storing values of text input
   const [userText, setUserText] = useState("");
-  // Storing variable that will trigger appropriate status message render
+  // Storing variable that will trigger appropriate status message to user
   const [status, setStatus] = useState("");
 
 
@@ -28,6 +28,7 @@ const App = () => {
     onValue(dbRef, (snapshot) => {
       const urlReactDB = snapshot.val();
 
+      let counter = 1;
       const urlRenderArray = [];
 
       for (let item in urlReactDB) {
@@ -41,11 +42,11 @@ const App = () => {
           cleanIndicator: urlReactDB[item].cleanIndicator,
           cleanUrlAddress: urlReactDB[item].cleanUrlAddress,
           date: urlReactDB[item].date,
+          count: counter
         };
-
+        counter = counter + 1;
         urlRenderArray.push(urlObjectBlock);
       }
-
       setUrlRenderList(urlRenderArray);
     });
   }, []);
@@ -128,7 +129,7 @@ const App = () => {
         
         <header>
           <div className="wrapper">
-            <h1>Phishing Net</h1>
+            <h1>The Phishing Net</h1>
           </div>
         </header>
 

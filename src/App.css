@@ -12,7 +12,7 @@ html{
 IMPORTS
 =========================*/
 
-@import url('https://fonts.googleapis.com/css2?family=Lato&family=Raleway:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chelsea+Market&family=Lato&family=Raleway:wght@600&display=swap');
 
 
 /* ======================
@@ -27,9 +27,13 @@ html {
 }
 
 h1, button {
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Chelsea Market', cursive;
   font-weight: 600;
   font-size: 5rem;
+}
+
+button {
+  font-family: 'Raleway', sans-serif;
 }
 
 h2, label {
@@ -116,8 +120,41 @@ h1 {
     0 0 92px rgb(100, 147, 209),
     0 0 102px #0fa,
     0 0 151px rgb(99, 159, 214);
+  animation: flickerAnimationTitle 4s infinite;
 }
 
+@keyframes flickerAnimationTitle {
+  /* This animation was inspired by: https://codepen.io/engsiang/pen/eWeNOP */
+  0% {
+    text-shadow:
+    0 0 7px rgb(143, 188, 209),
+    0 0 10px rgb(195, 197, 228),
+    0 0 82px rgb(134, 196, 238),
+    0 0 92px rgb(100, 147, 209),
+    0 0 102px #0fa,
+    0 0 151px rgb(99, 159, 214); 
+  }
+
+  50% {
+    text-shadow:
+    0 0 10px rgb(195, 197, 228),
+    0 0 82px rgb(134, 196, 238),
+    0 0 92px rgb(100, 147, 209),
+    0 0 102px #0fa,
+    0 0 151px rgb(99, 159, 214),
+    0 0 251px rgb(50, 109, 165);
+  }
+    
+  100% {
+    text-shadow:
+    0 0 7px rgb(143, 188, 209),
+    0 0 10px rgb(195, 197, 228),
+    0 0 82px rgb(134, 196, 238),
+    0 0 92px rgb(100, 147, 209),
+    0 0 102px #0fa,
+    0 0 151px rgb(99, 159, 214);
+  }
+}
 
 /* ======================
 DESCRIPTION
@@ -142,6 +179,7 @@ DESCRIPTION
 
 .description p {
   margin-top: 1rem;
+  color: white;
 }
 
 
@@ -150,7 +188,7 @@ INPUT
 =========================*/
 
 .input {
-  padding: 2rem 0 14em 0;
+  padding: 2rem 0 9rem 0;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgb(63, 150, 177));
   background-blend-mode: multiply;
 }
@@ -196,7 +234,7 @@ input[type=text] {
 
 .status {
   position: absolute;
-  top: 15.5rem;
+  top: 13.3rem;
   left: 50%;
   width: 100%;
   font-size: 2.2rem;
@@ -205,10 +243,10 @@ input[type=text] {
 }
 
 .statusFlashing {
-  animation: flickerAnimation 1s infinite;
+  animation: flickerAnimationStatus 1s infinite;
 }
 
-@keyframes flickerAnimation {
+@keyframes flickerAnimationStatus {
   /* This animation was inspired by: https://codepen.io/engsiang/pen/eWeNOP */
   0%   { opacity:1; }
   50%  { opacity:0; }
@@ -225,10 +263,6 @@ OUTPUT
   background: rgb(63, 150, 177);
 }
 
-.output p {
-  color: black;
-}
-
 .outputList {
   display: flex;
   justify-content: center;
@@ -241,21 +275,37 @@ OUTPUT
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 1rem;
+  padding: 0.8rem 0.9rem;
   height: 13.2rem;
   width: 18rem;
-  border-radius: 10px;
+  border-radius: 20px;
   border: 4px solid black;
 
   position: relative;
 }
 
+.resultsGroup p {
+  color: black;
+}
+
+.resultsGroup .itemCount {
+  color: white;
+}
+
 .cleanGroup {
-  background-color: rgba(63, 170, 63, 0.8);
+  /* background-color: rgba(63, 170, 63, 0.8); */
+  background: url('https://images.unsplash.com/photo-1578499176758-1f7f9bb1d25b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80') center;
+  background-size: 400%;
+  background-color: rgba(35, 180, 120, 0.4);
+  background-blend-mode: multiply;
 }
 
 .flaggedGroup {
-  background-color: rgba(170, 63, 63, 0.8);
+  /* background-color: rgba(170, 63, 63, 0.8); */
+  background: url('https://images.unsplash.com/photo-1578499176758-1f7f9bb1d25b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80') center;
+  background-size: 400%;
+  background-color: rgba(202, 34, 34, 0.4);
+  background-blend-mode: multiply;
 }
 
 .resultsTitle {
@@ -264,6 +314,15 @@ OUTPUT
   align-items: center;
   font-size: 1.2rem;
   text-align: center;
+}
+
+.resultsTitle p:nth-child(1) {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.3rem;
+}
+
+.resultsTitle p:nth-child(2) {
+  font-size: 1rem;
 }
 
 .resultsAddress {
@@ -275,7 +334,7 @@ OUTPUT
   margin: 0.3rem 0;
   text-align: center;
   font-size: 1rem;
-  background-color: rgba(196, 44, 44, 0.9);
+  background-color: rgba(216, 62, 62, 0.8);
 }
 
 .resultsAddress p {
@@ -286,7 +345,7 @@ OUTPUT
 }
 
 .cleanAddress {
-  background-color: rgba(33, 202, 56, 0.9);
+  background-color: rgba(33, 202, 56, 0.8);
 }
 
 .resultsDetails {
@@ -304,13 +363,13 @@ OUTPUT
 
 .date {
   font-size: 1rem;
-  margin-top: 0.9rem;
+  margin-top: 1.1rem;
 }
 
 .buttonDelete {
   position: absolute;
-  top: 0.1rem;
-  right: 0.1rem;
+  top: 0.14rem;
+  right: 0.14rem;
   background-color: transparent;
   cursor: pointer;
   transition: 0.2s;
@@ -318,6 +377,17 @@ OUTPUT
 
 .buttonDelete:hover {
   color: white;
+}
+
+.itemCount {
+  position: absolute;
+  top: -0.1rem;
+  left: -0.05rem;
+  color: blue;
+  border-radius: 15px 0 15px;
+  font-size: 1.1rem;
+  padding: 0.2rem 0.4rem 0.2rem 0.3rem;
+  background-color: black;
 }
 
 

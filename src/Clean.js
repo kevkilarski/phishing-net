@@ -15,7 +15,8 @@ function Clean(props) {
         <p>Safe waters ahoy!</p>
       </div>
       <p className="date"><em>Date: {props.urlItem.date}</em></p>
-      <button onClick={ props.deferrer } className="buttonDelete"> <FontAwesomeIcon className="fontAwesomeDelete" icon={faTimesCircle} size="lg"/> </button>
+      <button onClick={ props.deferrer } className="buttonDelete"><FontAwesomeIcon className="fontAwesomeDelete" icon={faTimesCircle} size="lg"/></button>
+      <p className="itemCount">{props.urlItem.count}</p>
     </li>
     
   );

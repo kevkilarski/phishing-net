@@ -4,4 +4,4 @@ This application uses the PhishStats API and Firebase integration to identify if
 
 Created by Kevin Kilarski
 
-Link to Project: https://goofy-mclean-b53de1.netlify.app/
+Link to Project: https://github.com/kevkilarski/the-phishing-net

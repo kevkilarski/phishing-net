@@ -23,7 +23,6 @@ const App = () => {
   // Storing variable that will trigger appropriate status message to user
   const [status, setStatus] = useState("");
 
-
   // useEffect hook for firebase subscription
   useEffect(() => {
     const dbRef = ref(realtime);
@@ -58,12 +57,10 @@ const App = () => {
     });
   }, []);
 
-
   // Function to set userText stateful variable with user input
   const handleChange = (event) => {
     setUserText(event.target.value);
   };
-
 
   // Function to call api upon form submission and send pertinent api data to firebase
   const handleSubmit = (event) => {
@@ -72,7 +69,7 @@ const App = () => {
     const dbRef = ref(realtime);
 
     // Parsing user text to determine if a full url is provided
-    const urlCheck = userText.substr(0, 4);
+    const urlCheck = userText.substring(0, 4);
 
     // Conditional logic to either require an http prefix, require entering any text, or submit the user text
     if (userText && urlCheck !== "http") {
@@ -82,7 +79,6 @@ const App = () => {
       setStatus("needText");
     } else {
       setStatus("apiLoading");
-      
       axios({
         method: "GET",
         url: "https://phishstats.info:2096/api/phishing",
@@ -95,7 +91,7 @@ const App = () => {
 
         // This timeout was added only to demonstrate a 'loading' feature for the api that I worked on.  It would be removed for a production build.
         setTimeout(() => {
-          const date = new Date().toString().substr(0, 15);
+          const date = new Date().toString().substring(0, 15);
 
           // If no objects found in the target api call, create 'clean' object to send to firebase. Otherwise, create 'flagged' object.
           // I chose to deconstruct the api return because of the high number of properties retreived with each call.

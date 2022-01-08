@@ -13,6 +13,7 @@ import "./App.css";
 // importing components
 import Input from "./Input.js";
 import Output from "./Output.js";
+import { faBookDead } from "@fortawesome/free-solid-svg-icons";
 
 const App = () => {
 
@@ -22,6 +23,12 @@ const App = () => {
   const [userText, setUserText] = useState("");
   // Storing variable that will trigger appropriate status message to user
   const [status, setStatus] = useState("");
+
+
+  // // Storing toggle for active site function
+  // const [activeSite, setActiveSite] = useState(false);
+
+
 
   // useEffect hook for firebase subscription
   useEffect(() => {
@@ -62,6 +69,59 @@ const App = () => {
     setUserText(event.target.value);
   };
 
+
+
+let activeSite = false;
+
+  // Function to check if website it active
+  async function activeSiteCheck( ) {
+    // axios
+    // .get(userText, 'Access-Control-Allow-Origin: *')
+    //   .then((response) => {
+    //     console.log(response);
+    //     setActiveSite(true);
+    //   })
+    //   .catch((reason) => {
+    //     console.log("ERROR")
+    //   })
+    
+ const test = fetch(userText, { mode: 'no-cors' })
+      .then((response) => {
+        
+        if (response.status === 0) {
+          activeSite = true;
+          console.log("THIS IS AN ACTIVE SITE")
+        } else (
+          console.log("THIS AINT NO SITE!!")
+        )
+
+      })
+      .catch((reason) => {
+        console.log("ERROR")
+      })
+
+await test;
+
+    // axios({
+    //   method: "GET",
+    //   url: "https://www.google.com",
+    //   // 'Access-Control-Allow-Origin': '*',
+    //   // withCredentials: false,
+    //   mode: 'no-cors',
+    //   dataResponse: "jsonp"
+    // })
+    // .then((response) => {
+    //   console.log("YEP");
+    //   setActiveSite(true);
+    // })
+    // .catch((reason) => {
+    //   console.log("ERROR")
+    // })
+  }
+
+
+
+
   // Function to call api upon form submission and send pertinent api data to firebase
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -96,6 +156,21 @@ const App = () => {
           // If no objects found in the target api call, create 'clean' object to send to firebase. Otherwise, create 'flagged' object.
           // I chose to deconstruct the api return because of the high number of properties retreived with each call.
           if (response.data.length === 0) {
+
+
+            
+              activeSiteCheck().then(response => {
+
+                if (activeSite === true) {
+                  console.log("True in the truest sense")
+                } else {
+                  console.log("FALSEY")
+                }
+                
+              });
+
+
+
             const apiRevisedClean = {};
             apiRevisedClean.cleanIndicator = true;
             apiRevisedClean.cleanUrlAddress = userText;

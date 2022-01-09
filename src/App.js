@@ -13,7 +13,7 @@ import "./App.css";
 // importing components
 import Input from "./Input.js";
 import Output from "./Output.js";
-// import { faBookDead } from "@fortawesome/free-solid-svg-icons";
+// import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 const App = () => {
 
@@ -23,14 +23,6 @@ const App = () => {
   const [userText, setUserText] = useState("");
   // Storing variable that will trigger appropriate status message to user
   const [status, setStatus] = useState("");
-  // Storing local variable to toggle if site is active (desire it to be reset each render, so local variable selected for versatility)
-  let activeSite = false;
-  const [live, setLive] = useState(false);
-
-  // // Storing toggle for active site function
-  // const [activeSite, setActiveSite] = useState(false);
-
-
 
   // useEffect hook for firebase subscription
   useEffect(() => {
@@ -57,9 +49,6 @@ const App = () => {
           count: counter
         };
         counter = counter + 1;
-        // if (counter === 2) {
-        //   setStatus('previousItems');
-        // }
         urlRenderArray.push(urlObjectBlock);
       }
       setUrlRenderList(urlRenderArray);
@@ -72,59 +61,6 @@ const App = () => {
   };
 
 
-
-
-  // Function to check if website it active
-  async function activeSiteCheck() {
-    // axios
-    // .get(userText, 'Access-Control-Allow-Origin: *')
-    //   .then((response) => {
-    //     console.log(response);
-    //     setActiveSite(true);
-    //   })
-    //   .catch((reason) => {
-    //     console.log("ERROR")
-    //   })
-
-
-    
-    const test = fetch(userText, { mode: 'no-cors' })
-      .then((response) => {
-
-        if (response.status === 0) {
-          setLive(true);
-        } else {
-          setLive(false);
-        }
-
-      })
-      .catch((reason) => {
-        setLive(false);
-        console.log("ERROR")
-      })
-
-await test;
-
-    // axios({
-    //   method: "GET",
-    //   url: "https://www.google.com",
-    //   // 'Access-Control-Allow-Origin': '*',
-    //   // withCredentials: false,
-    //   mode: 'no-cors',
-    //   dataResponse: "jsonp"
-    // })
-    // .then((response) => {
-    //   console.log("YEP");
-    //   setActiveSite(true);
-    // })
-    // .catch((reason) => {
-    //   console.log("ERROR")
-    // })
-  }
-
-
-
-
   // Function to call api upon form submission and send pertinent api data to firebase
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -134,50 +70,13 @@ await test;
     // Parsing user text to determine if a full url is provided
     const urlCheck = userText.substring(0, 4);
 
-
-
-  
-      // axios
-      // .get(userText, 'Access-Control-Allow-Origin: *')
-      //   .then((response) => {
-      //     console.log(response);
-      //     setActiveSite(true);
-      //   })
-      //   .catch((reason) => {
-      //     console.log("ERROR")
-      //   })
-  
-  
-      
-      fetch(userText, { mode: 'no-cors' })
-        .then((response) => {
-  
-          if (response.status === 0) {
-            setLive(true);
-            activeSite = true;
-          } else {
-            setLive(false);
-            activeSite = false;
-          }
-  
-        })
-        .catch((reason) => {
-          setLive(false);
-          activeSite = false;
-          console.log("ERROR")
-        })
-  
-
-
     // Conditional logic to either require an http prefix, require entering any text, or submit the user text
     if (userText && urlCheck !== "http") {
       setStatus("needUrl");
       setUserText("");
     } else if (!userText) {
       setStatus("needText");
-    } else if (activeSite === false) {
-      console.log("NOT GONNA HAPPEN")
-    } else if (activeSite === true) {
+    } else {
       setStatus("apiLoading");
       axios({
         method: "GET",
@@ -189,10 +88,32 @@ await test;
         },
       }).then((response) => {
 
+        // Check to see if website is active
+        let activeSite = false;
+        
+        fetch(userText, { mode: 'no-cors' })
+        .then((response) => {
+          if (response.status === 0) {
+            activeSite = true;
+            console.log("CORRECT URL")
+          } else {
+            activeSite = false;
+            console.log("NOT EVEN CLOSE")
+          }
+        })
+        .catch(() => {
+          activeSite = false;
+          console.log("SLIGHTLY OFF");
+        })
+        .finally(() => {
 
-
-
-
+          // Conditional check to either notify user that the site isn't active or proceed with API call with an active site
+          if (activeSite === false) {
+            console.log("THIS ISN'T A SITE. Can remove timeout being active when not a site.");
+            setStatus("notActiveSite");
+          } else {
+            console.log("A SITE INDEED")
+            
             // This timeout was added only to demonstrate a 'loading' feature for the api that I worked on.  It would be removed for a production build.
             setTimeout(() => {
               const date = new Date().toString().substring(0, 15);
@@ -200,13 +121,6 @@ await test;
               // If no objects found in the target api call, create 'clean' object to send to firebase. Otherwise, create 'flagged' object.
               // I chose to deconstruct the api return because of the high number of properties retreived with each call.
               if (response.data.length === 0) {
-
-
-                
-    
-
-
-
                 const apiRevisedClean = {};
                 apiRevisedClean.cleanIndicator = true;
                 apiRevisedClean.cleanUrlAddress = userText;
@@ -229,9 +143,8 @@ await test;
               setStatus("apiComplete");
             }, 2000);
 
-
-
-
+          }
+        })
       });
     }
   };

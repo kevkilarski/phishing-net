@@ -9,6 +9,8 @@ function StatusMessage({status}) {
         ( <p className="status">See Your Catch Below!</p> ) : 
         status === 'deletedItem' ?
         ( <p className="status">You Cut The Line!</p> ) : 
+        status === 'notActiveSite' ?
+        ( <p className="status">Please Enter a Real Site!</p> ) :
         null;
 }
 
